@@ -13,16 +13,11 @@ public class WorkWithArgs {
         }
 
         if ((charsA.get(charsA.size()-1).equals('*'))||(charsA.get(0).equals('*'))){
-
             mask = mask.replaceAll("[*]", "\\.\\*");
-            System.out.println(mask);
-
-
         }
 
         else if((charsA.get(charsA.size()-1).equals('?'))||(charsA.get(0).equals('?'))){
             mask = mask.replaceAll("[?]", "\\.\\?");
-
         }
 
 
@@ -32,18 +27,13 @@ public class WorkWithArgs {
 
     public String[] splitMask (String mask){
 
+        WorkWithArgs WWA = new WorkWithArgs();
         String[] subStr;
         subStr = mask.split(",");
 
-        WorkWithArgs WWA = new WorkWithArgs();
-
         for (int i=0; i<subStr.length; i++) {
-
             subStr[i]=WWA.convertMask(subStr[i]);
-
         }
-
-
 
         return subStr;
     }

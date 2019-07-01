@@ -12,26 +12,6 @@ public class ReadLogFileTest {
     ReadLogFile RLF = new ReadLogFile();
     ArrayList<String> levels= new ArrayList<>();
 
-    @Test
-    public void getNumbersOfLinesByPercent() {
-    }
-
-    @Test
-    public void getDateTime() {
-
-    }
-
-    @Test
-    public void getLevels() {
-   }
-
-    @Test
-    public void getLogLines() {
-    }
-
-    @Test
-    public void getName() {
-    }
 
     @Test
     public void getMessage() throws FileNotFoundException {
@@ -58,55 +38,20 @@ public class ReadLogFileTest {
 
         RLF.read();
 
-        assertEquals(18,RLF.getNumberOfLogLines());
+        assertEquals(8,RLF.getNumberOfLogLines());
     }
 
-    @Test
-    public void read() {
-
-    }
-
-    @Test
-    public void numbersOfLinesGroupedByLogLevels() {
-    }
 
     @Test
     public void numbersOfUniqueNames() throws FileNotFoundException {
 
         RLF.read();
-        int numbersOfUniqueNamesTest = 6;
+        int numbersOfUniqueNamesTest = 4;
 
         assertEquals(numbersOfUniqueNamesTest,RLF.numbersOfUniqueNames());
 
 
     }
 
-    @Test
-    public void mostEncounteredThreadName() {
-    }
 
-    @Test
-    public void averageTimeBetweenTheLogLines() {
-    }
-
-    @Test
-    public void levelFilter() {
-    }
-
-    @Test
-    public void namesFilter() {
-    }
-
-    @Test
-    public void durationBetween2Dates() {
-    }
-
-    @Test
-    public void getPeriodDateLogLines() {
-    }
-
-    @Test
-    public void messageFilter() {
-
-    }
 }

@@ -11,10 +11,10 @@ public class Main {
         public static void main(String[] args) throws IOException {
 
 
-            Scanner sc = new Scanner(new File("help.txt"));
-            while (sc.hasNext()){
-                System.out.println(sc.nextLine());}
-            sc.close();
+//            Scanner sc = new Scanner(new File("help.txt"));
+////            while (sc.hasNext()){
+////                System.out.println(sc.nextLine());}
+////            sc.close();
 
             ReadLogFile RLF = new ReadLogFile();
             RLF.read();

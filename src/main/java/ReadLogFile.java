@@ -1,15 +1,11 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReadLogFile {
@@ -28,21 +24,6 @@ public class ReadLogFile {
     private int numberOfLogLines = 0;
 
 
-    public ArrayList<LocalDateTime> getDateTime() {
-        return dateTime;
-    }
-
-    public ArrayList<String> getLevels() {
-        return levels;
-    }
-
-    public ArrayList<String> getLogLines() {
-        return logLines;
-    }
-
-    public ArrayList<String> getName() {
-        return names;
-    }
 
     public ArrayList<String> getMessage() {
         return message;
@@ -387,15 +368,18 @@ public class ReadLogFile {
 
         Pattern p = Pattern.compile(mask);
 
+        int g=0;
         for (int i = 0; i < message.size(); i++) {
             if (!p.matcher(message.get(i)).matches()) {
                 System.out.println(logLines.get(i));
-            }
-            else {
+                g++;
 
-                System.out.println("Nothing found");
             }
+
         }
+
+        if (g == 0)
+            System.out.println("Nothing found");
 
 
     }
