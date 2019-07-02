@@ -16,15 +16,28 @@ public class Main {
 ////                System.out.println(sc.nextLine());}
 ////            sc.close();
 
-            ReadLogFile RLF = new ReadLogFile();
-            RLF.read();
+
 
             String startDateTime = "";
             String endDateTime = "";
             String periodTime = "";
             String mask = "";
             String outputFileName = "";
+            String strict= "";
+            String logFileName = "";
 
+
+
+
+
+            for(String s : args){
+                if(s.contains(".log")){
+
+                    logFileName=s;
+                }
+
+            }
+            ReadLogFile RLF = new ReadLogFile();
 
 
 
@@ -33,6 +46,9 @@ public class Main {
 
                  switch (args[i]){
 
+                     case "--strict":
+                         strict = args[i];
+                         break;
 
                      case "-s":
                          startDateTime= args[i+1];
@@ -50,13 +66,15 @@ public class Main {
                          mask = args[i+1];
                          WorkWithArgs maskCheck = new WorkWithArgs();
                          mask= maskCheck.convertMask(mask);
-                         RLF.messageFilter(mask);
+
 
                          break;
 
                      case "-p":
                          periodTime = args[i+1];
                          break;
+
+
                      case "-t":
                          mask = args[i+1];
                          maskCheck = new WorkWithArgs();
@@ -73,16 +91,20 @@ public class Main {
 
                      case "-c" :
                          Statistic statistic = new Statistic();
-                         statistic.showStat();
+                         statistic.showStat(logFileName);
                          break;
                      case "--stats":
                          statistic = new Statistic();
-                         statistic.showStat();
+                         statistic.showStat(logFileName);
                          break;
 
                  }
 
              }
+
+            RLF.read(strict,logFileName);
+            RLF.messageFilter(mask);
+
 
 
 

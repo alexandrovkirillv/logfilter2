@@ -8,10 +8,12 @@ import java.util.*;
 public class Statistic  {
 
 
-    public void showStat() throws FileNotFoundException {
+    public void showStat(String exampleFileName) throws FileNotFoundException {
 
         ReadLogFile RLF = new ReadLogFile();
-        RLF.read();
+
+        String strict = "";
+        RLF.read(strict,exampleFileName);
 
         System.out.println("Number Of Log Lines: " + RLF.getNumberOfLogLines());
         System.out.println("Average time between the log lines(Millis): " + RLF.averageTimeBetweenTheLogLines());
