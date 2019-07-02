@@ -35,20 +35,19 @@ public class Main {
 
                     logFileName=s;
                 }
+                else if (s.equals("--strict")){
+                    strict=s;
+                }
 
             }
+
             ReadLogFile RLF = new ReadLogFile();
-
-
+            RLF.read(strict,logFileName);
 
 
              for (int i=0; i <args.length; i++){
 
                  switch (args[i]){
-
-                     case "--strict":
-                         strict = args[i];
-                         break;
 
                      case "-s":
                          startDateTime= args[i+1];
@@ -90,21 +89,15 @@ public class Main {
 //                     case "-f":
 
                      case "-c" :
-                         Statistic statistic = new Statistic();
-                         statistic.showStat(logFileName);
+                         RLF.showStat();
                          break;
                      case "--stats":
-                         statistic = new Statistic();
-                         statistic.showStat(logFileName);
+                         RLF.showStat();
                          break;
 
                  }
 
              }
-
-            RLF.read(strict,logFileName);
-            RLF.messageFilter(mask);
-
 
 
 

@@ -12,8 +12,21 @@ public class ReadLogFile {
 
     private ArrayList<LocalDateTime> dateTime = new ArrayList<>();
     private ArrayList<String> levels = new ArrayList<>();
+
+    public ArrayList<String> getNames() {
+        return names;
+    }
+
     private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> uniqueNames = new ArrayList<>();
     private ArrayList<String> message = new ArrayList<>();
+
+
+    public ArrayList<Integer> getFrequency() {
+        return frequency;
+    }
+
+    private ArrayList<Integer> frequency = new ArrayList<>();
     private ArrayList<String> numbersOfLinesByPercent = new ArrayList<>();
     private ArrayList<String> logLines = new ArrayList<>();
     private int numberOfLogLines = 0;
@@ -77,8 +90,6 @@ public class ReadLogFile {
             }
 
 
-
-
              levels.add(subStr[1]);
              names.add(subStr[3].substring(0, subStr[3].length() - 1));
              for (int g = 4; g != subStr.length; g++) {
@@ -93,18 +104,6 @@ public class ReadLogFile {
              numberOfLogLines++;
         }
         sc.close();
-
-//
-//        System.out.println("");
-//        for(LocalDateTime s :dateTime)
-//            System.out.println(s);
-//        System.out.println("");
-
-//        System.out.println(names);
-//        System.out.println(message);
-//        System.out.println(levels);
-//        System.out.println("");
-
 
     }
 
@@ -179,21 +178,7 @@ public class ReadLogFile {
         return uniqueNames.size();
     }
 
-    public ArrayList mostEncounteredThreadName() {
 
-        Set<String> unique = new HashSet<String>(names);
-
-        ArrayList<String> max = new ArrayList<>();
-
-        for (String x : unique) {
-
-
-            max.add(x + " " + Collections.frequency(names, x));
-        }
-
-
-        return max;
-    }
 
 
     public Long averageTimeBetweenTheLogLines() {
@@ -203,7 +188,6 @@ public class ReadLogFile {
 
         for (int i = 0; i < numberOfLogLines-1; i++) {
 
-            System.out.println("1");
             avTime.add(Duration.between(dateTime.get(i), dateTime.get(i + 1)).toMillis());
             avTimeLog += avTime.get(i);
 
@@ -214,8 +198,17 @@ public class ReadLogFile {
     }
 
 
+    public void showStat()  {
 
+        System.out.println("Number Of Log Lines: " + getNumberOfLogLines());
+        System.out.println("Average time between the log lines(Millis): " + averageTimeBetweenTheLogLines());
+        System.out.println("Numbers Of Lines Grouped By Log Levels: " + NumbersOfLinesGroupedByLogLevels());
+        System.out.println("Numbers Of Lines Grouped By Percent: " + getNumbersOfLinesByPercent());
+        System.out.println("Number Of Unique Names: " + numbersOfUniqueNames());
+        //System.out.println("Most encountered thread name: " + mostEncounteredThreadName().get(0));
+       // System.out.println("Least encountered thread name: " + mostEncounteredThreadName().get(mostEncounteredThreadName().size()-1));
 
+    }
 
 
     public void durationBetween2Dates(String startDateTimeString, String endDateTimeString) {
@@ -226,35 +219,7 @@ public class ReadLogFile {
         LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
 
-
-        int i = 0;
-        int g = 0;
-        for (LocalDateTime l : dateTime) {
-            if ((i < logLines.size())&&(l.isAfter(startDateTime))) {
-                i = dateTime.indexOf(l);
-                break;
-            }
-
-        }
-
-        for (LocalDateTime l : dateTime) {
-            if ((g < logLines.size())&&(l.isBefore(endDateTime))) {
-                g = dateTime.indexOf(l);
-
-            }
-        }
-
-        if (i>=g)
-            System.out.println("Nothing found, End time is before or equal Start time");
-
-        else {
-
-            for (int n = i; n <= g; n++) {
-
-                System.out.println(logLines.get(n));
-            }
-
-        }
+        linesBetween2Dates(startDateTime,endDateTime);
 
     }
 
@@ -277,33 +242,7 @@ public class ReadLogFile {
             endDateTime = startDateTime.plusNanos(duration.toNanos());
         }
 
-        int i = 0;
-
-        for (LocalDateTime l : dateTime) {
-            if ((i < logLines.size()) && (l.isAfter(startDateTime))) {
-                i = dateTime.indexOf(l);
-                break;
-            }
-        }
-        int g=0;
-
-        for (LocalDateTime l : dateTime) {
-            if ((g < logLines.size())&&(l.isBefore(endDateTime))) {
-                g = dateTime.indexOf(l);
-            }
-        }
-
-        if (i>=g)
-            System.out.println("Nothing found, End time is before or equal Start time");
-
-        else {
-
-            for (int n = i; n <= g; n++) {
-
-                System.out.println(logLines.get(n));
-            }
-
-        }
+        linesBetween2Dates(startDateTime,endDateTime);
 
     }
 
@@ -327,7 +266,14 @@ public class ReadLogFile {
             startDateTime = endDateTime.minusNanos(duration.toNanos());
         }
 
-        int i = 0;
+        linesBetween2Dates(startDateTime,endDateTime);
+
+    }
+
+    public void linesBetween2Dates(LocalDateTime startDateTime, LocalDateTime endDateTime){
+
+        int i=0;
+        int g=0;
 
         for (LocalDateTime l : dateTime) {
             if ((i < logLines.size()) && (l.isAfter(startDateTime))) {
@@ -335,7 +281,7 @@ public class ReadLogFile {
                 break;
             }
         }
-        int g=0;
+
 
         for (LocalDateTime l : dateTime) {
             if ((g < logLines.size())&&(l.isBefore(endDateTime))) {
@@ -399,13 +345,8 @@ public class ReadLogFile {
             }
         }
 
-
         return filtredLevels;
     }
-
-
-
-
 
 }
 
