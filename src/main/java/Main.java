@@ -1,30 +1,28 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 public class Main {
         public static void main(String[] args) throws IOException {
 
 
-//            Scanner sc = new Scanner(new File("help.txt"));
-////            while (sc.hasNext()){
-////                System.out.println(sc.nextLine());}
-////            sc.close();
 
+//           Scanner sc = new Scanner(new File("help.txt"));
+//           while (sc.hasNext()){
+//           System.out.println(sc.nextLine());}
+//           sc.close();
 
 
             String startDateTime = "";
             String endDateTime = "";
             String periodTime = "";
-            String mask = "";
             String outputFileName = "";
             String strict= "";
             String logFileName = "";
+
 
 
 
@@ -41,8 +39,13 @@ public class Main {
 
             }
 
-            ReadLogFile RLF = new ReadLogFile();
+            ReadLogFile RLF = new ReadLogFile(LocalDateTime.now(),"","","");
             RLF.read(strict,logFileName);
+
+            ArrayList<ReadLogFile> finSort = new ArrayList<>(RLF.getArrayLogLines());
+            ArrayList<ReadLogFile> sortTemp = new ArrayList<>();
+
+           // Stat stat = new Stat("",1);
 
 
              for (int i=0; i <args.length; i++){
@@ -53,47 +56,56 @@ public class Main {
                          startDateTime= args[i+1];
                          break;
 
-                     case "-o":
-                         outputFileName= args[i+1];
-                         break;
-
-
-                     case "-e":
-                         endDateTime = args[i+1];
-                         break;
-                     case "-m":
-                         mask = args[i+1];
-                         WorkWithArgs maskCheck = new WorkWithArgs();
-                         mask= maskCheck.convertMask(mask);
-
-
-                         break;
-
                      case "-p":
                          periodTime = args[i+1];
                          break;
 
+                     case "-e":
+                         endDateTime = args[i+1];
+                         break;
+
+                     case "-o":
+                         outputFileName= args[i+1];
+                         break;
+
+//                     case "-l":
+//                         String mask = args[i+1];
+//                         sortTemp.addAll(RLF.levelFilter(mask,finSort));
+//                         finSort.clear();
+//                         finSort.addAll(sortTemp);
+//                         break;
+
+                     case "-m":
+                         String mask = args[i+1];
+                         String field = "message";
+                         sortTemp.addAll(RLF.filter(mask,field,finSort));
+
+                         finSort.clear();
+                         finSort.addAll(sortTemp);
+                         sortTemp.clear();
+
+                         break;
 
                      case "-t":
                          mask = args[i+1];
-                         maskCheck = new WorkWithArgs();
-                         mask= maskCheck.convertMask(mask);
-                         RLF.namesFilter(mask);
+                         field = "name";
+                         sortTemp.addAll(RLF.filter(mask,field,finSort));
+
+                         finSort.clear();
+                         finSort.addAll(sortTemp);
+                         sortTemp.clear();
+
+
                          break;
-                     case "-l":
-                         mask = args[i+1];
-                         maskCheck = new WorkWithArgs();
-                         String[] maskArray = maskCheck.splitMask(mask);
-                         RLF.levelFilter(maskArray);
-                         break;
+
 //                     case "-f":
 
-                     case "-c" :
-                         RLF.showStat();
-                         break;
-                     case "--stats":
-                         RLF.showStat();
-                         break;
+//                     case "-c" :
+//                         stat.showStat(logFileName);
+//                         break;
+//                     case "--stats":
+//                         stat.showStat(logFileName);
+//                         break;
 
                  }
 
@@ -119,6 +131,15 @@ public class Main {
             }
 
 
+
+
+            Set<ReadLogFile> readLogFileSet = new TreeSet<>();
+            readLogFileSet.addAll(finSort);
+
+
+
+          for(ReadLogFile s : readLogFileSet)
+                 System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
 
 
 

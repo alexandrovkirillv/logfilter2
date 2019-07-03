@@ -25,16 +25,4 @@ public class WorkWithArgs {
 
     }
 
-    public String[] splitMask (String mask){
-
-        WorkWithArgs WWA = new WorkWithArgs();
-        String[] subStr;
-        subStr = mask.split(",");
-
-        for (int i=0; i<subStr.length; i++) {
-            subStr[i]=WWA.convertMask(subStr[i]);
-        }
-
-        return subStr;
-    }
 }

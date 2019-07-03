@@ -1,6 +1,6 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -8,35 +8,54 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class ReadLogFile {
-
-    private ArrayList<LocalDateTime> dateTime = new ArrayList<>();
-    private ArrayList<String> levels = new ArrayList<>();
-
-    public ArrayList<String> getNames() {
-        return names;
-    }
-
-    private ArrayList<String> names = new ArrayList<>();
-    private ArrayList<String> uniqueNames = new ArrayList<>();
-    private ArrayList<String> message = new ArrayList<>();
+public class ReadLogFile implements Comparable<ReadLogFile> {
 
 
-    public ArrayList<Integer> getFrequency() {
-        return frequency;
-    }
-
-    private ArrayList<Integer> frequency = new ArrayList<>();
-    private ArrayList<String> numbersOfLinesByPercent = new ArrayList<>();
-    private ArrayList<String> logLines = new ArrayList<>();
+    private LocalDateTime dateTime = LocalDateTime.now();
+    private String level = "";
+    private String name = "";
+    private String message ="";
+    private String numbersOfLinesByPercent = "";
+    private List<ReadLogFile> arrayLogLines = new ArrayList<>();
     private int numberOfLogLines = 0;
 
-    public ArrayList<String> getNumbersOfLinesByPercent() {
+    public ReadLogFile(LocalDateTime dateTime, String level, String name, String message) {
+        this.dateTime = dateTime;
+        this.level = level;
+        this.name = name;
+        this.message = message;
+    }
+
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<ReadLogFile> getArrayLogLines() {
+        return arrayLogLines;
+    }
+
+    public String getNumbersOfLinesByPercent() {
         return numbersOfLinesByPercent;
     }
     public int getNumberOfLogLines() {
         return numberOfLogLines;
     }
+
+
+
 
 
 
@@ -63,7 +82,7 @@ public class ReadLogFile {
                  strictCount++;
                 continue; }
 
-             if ((!subStr[1].equals("TRCE"))&&(!subStr[1].equals("ERROR"))&&(!subStr[1].equals("DEBUG"))&&(!subStr[1].equals("INFO"))&&(!subStr[1].equals("WARN"))){
+             if ((!subStr[1].equals("TRACE"))&&(!subStr[1].equals("ERROR"))&&(!subStr[1].equals("DEBUG"))&&(!subStr[1].equals("INFO"))&&(!subStr[1].equals("WARN"))){
                  strictCount++;
                  continue;}
 
@@ -76,137 +95,31 @@ public class ReadLogFile {
 
 
 
-            dateTime.add(dateTimeTemp);
-
-             if ((numberOfLogLines>0)&&(dateTime.get(numberOfLogLines-1).isAfter(dateTime.get(numberOfLogLines)))){
-                 dateTime.remove(numberOfLogLines);
-                 strictCount++;
-                 continue;
-             }
-
             if ((strictCount>0)&&(!strict.equals(""))){
                 System.out.println("code 1");
                 break;
             }
 
-
-             levels.add(subStr[1]);
-             names.add(subStr[3].substring(0, subStr[3].length() - 1));
              for (int g = 4; g != subStr.length; g++) {
 
                 messageStr += subStr[g];
                 messageStr += " ";
              }
-             message.add(messageStr);
+
+
+             arrayLogLines.add(new ReadLogFile(dateTimeTemp,subStr[1],subStr[3].substring(0, subStr[3].length() - 1),messageStr));
              messageStr = "";
 
-             logLines.add(Str);
+            if ((numberOfLogLines>0)&&(arrayLogLines.get(numberOfLogLines-1).getDateTime().isAfter(arrayLogLines.get(numberOfLogLines).getDateTime()))){
+
+                strictCount++;
+                continue;
+            }
+
+
              numberOfLogLines++;
         }
         sc.close();
-
-    }
-
-
-    public ArrayList NumbersOfLinesGroupedByLogLevels() {
-
-
-        ArrayList<String> numbersOfLinesByLevels = new ArrayList<>();
-        int TRACE = 0;
-        int DEBUG = 0;
-        int INFO = 0;
-        int WARN = 0;
-        int ERROR = 0;
-
-
-        for (String m : levels) {
-
-            switch (m) {
-                case "INFO":
-
-                    INFO++;
-                    break;
-                case "TRACE":
-
-                    TRACE++;
-                    break;
-                case "DEBUG":
-
-                    DEBUG++;
-                    break;
-                case "WARN":
-
-                    WARN++;
-                    break;
-                case "ERROR":
-
-                    ERROR++;
-                    break;
-            }
-
-        }
-
-
-        numbersOfLinesByLevels.add("TRACE " + TRACE);
-        numbersOfLinesByLevels.add("DEBUG " + DEBUG);
-        numbersOfLinesByLevels.add("INFO " + INFO);
-        numbersOfLinesByLevels.add("WARN " + WARN);
-        numbersOfLinesByLevels.add("ERROR " + ERROR);
-
-        int percent = INFO + TRACE + WARN + DEBUG + ERROR;
-
-
-        numbersOfLinesByPercent.add("TRACE " + (TRACE * 100 / percent));
-        numbersOfLinesByPercent.add("DEBUG " + (DEBUG * 100 / percent));
-        numbersOfLinesByPercent.add("INFO " + (INFO * 100 / percent));
-        numbersOfLinesByPercent.add("WARN " + (WARN * 100 / percent));
-        numbersOfLinesByPercent.add("ERROR " + (ERROR * 100 / percent));
-
-        return numbersOfLinesByLevels;
-    }
-
-
-    public int numbersOfUniqueNames() {
-
-        ArrayList<String> uniqueNames = new ArrayList<>();
-
-        for (String x : names) {
-            if (!uniqueNames.contains(x))
-                uniqueNames.add(x);
-        }
-
-        return uniqueNames.size();
-    }
-
-
-
-
-    public Long averageTimeBetweenTheLogLines() {
-
-        ArrayList<Long> avTime = new ArrayList<>();
-        long avTimeLog = 0;
-
-        for (int i = 0; i < numberOfLogLines-1; i++) {
-
-            avTime.add(Duration.between(dateTime.get(i), dateTime.get(i + 1)).toMillis());
-            avTimeLog += avTime.get(i);
-
-        }
-
-        return avTimeLog / (numberOfLogLines - 1);
-
-    }
-
-
-    public void showStat()  {
-
-        System.out.println("Number Of Log Lines: " + getNumberOfLogLines());
-        System.out.println("Average time between the log lines(Millis): " + averageTimeBetweenTheLogLines());
-        System.out.println("Numbers Of Lines Grouped By Log Levels: " + NumbersOfLinesGroupedByLogLevels());
-        System.out.println("Numbers Of Lines Grouped By Percent: " + getNumbersOfLinesByPercent());
-        System.out.println("Number Of Unique Names: " + numbersOfUniqueNames());
-        //System.out.println("Most encountered thread name: " + mostEncounteredThreadName().get(0));
-       // System.out.println("Least encountered thread name: " + mostEncounteredThreadName().get(mostEncounteredThreadName().size()-1));
 
     }
 
@@ -272,20 +185,30 @@ public class ReadLogFile {
 
     public void linesBetween2Dates(LocalDateTime startDateTime, LocalDateTime endDateTime){
 
-        int i=0;
         int g=0;
+        int i = 0;
 
-        for (LocalDateTime l : dateTime) {
-            if ((i < logLines.size()) && (l.isAfter(startDateTime))) {
-                i = dateTime.indexOf(l);
+
+        System.out.println(startDateTime);
+        System.out.println(endDateTime);
+
+
+        for (int k = 0; k< arrayLogLines.size();k++) {
+            if  (arrayLogLines.get(k).dateTime.isAfter(startDateTime)) {
+                i = k;
+                System.out.println("i " + i);
                 break;
             }
         }
 
 
-        for (LocalDateTime l : dateTime) {
-            if ((g < logLines.size())&&(l.isBefore(endDateTime))) {
-                g = dateTime.indexOf(l);
+
+
+        for (int k = 0; k< arrayLogLines.size();k++) {
+
+            if (arrayLogLines.get(k).dateTime.isBefore(endDateTime)){
+                g=k;
+                System.out.println("g " + g);
             }
         }
 
@@ -294,59 +217,86 @@ public class ReadLogFile {
 
         else {
 
-            for (int n = i; n <= g; n++) {
+            for (int b = i ; b< arrayLogLines.size();b++) {
 
-                System.out.println(logLines.get(n));
+                System.out.println(arrayLogLines.get(b).dateTime+ " " +arrayLogLines.get(b).getLevel()+ " " +"["+arrayLogLines.get(b).getName()+"]" + " " +arrayLogLines.get(b).getMessage());
             }
 
         }
 
     }
 
-    public ArrayList<String> messageFilter(String mask) {
+    public ArrayList<ReadLogFile> filter(String mask, String field,ArrayList<ReadLogFile> arrayLogLinesFiltered) {
 
-        ArrayList<String> filtredMessage = new ArrayList<>();
+        ArrayList<ReadLogFile> filteredList = new ArrayList<>();
+        WorkWithArgs checkMask = new WorkWithArgs();
+
+
+
+        mask = checkMask.convertMask(mask);
         Pattern p = Pattern.compile(mask);
 
-        for (int i = 0; i < message.size(); i++) {
-            if (!p.matcher(message.get(i)).matches()) {
-                System.out.println(logLines.get(i));
+        if (field.equals("name")) {
 
+            for (int i = 0; i < arrayLogLinesFiltered.size(); i++) {
+
+                if (!p.matcher(arrayLogLinesFiltered.get(i).name).matches()) {
+
+                    filteredList.add(arrayLogLinesFiltered.get(i));
+
+                }
             }
         }
-        return filtredMessage;
-    }
+        else if (field.equals("message")){
 
-    public ArrayList<String> namesFilter(String mask) {
+            for (int i = 0; i < arrayLogLinesFiltered.size(); i++) {
 
-        Pattern p = Pattern.compile(mask);
-        ArrayList<String> filtredNames = new ArrayList<>();
+                if (!p.matcher(arrayLogLinesFiltered.get(i).message).matches()) {
 
-        for (int i = 0; i < names.size(); i++) {
-            if (!p.matcher(names.get(i)).matches()) {
-                filtredNames.add(logLines.get(i));
+                    filteredList.add(arrayLogLinesFiltered.get(i));
 
+                }
             }
-        }
-        return filtredNames;
-    }
 
-    public ArrayList<String> levelFilter(String [] maskArray) {
-
-        ArrayList<String> filtredLevels = new ArrayList<>();
-
-        for(String mask : maskArray) {
-
-            Pattern p = Pattern.compile(mask);
-
-            for (int i = 0; i < levels.size(); i++) {
-                if (p.matcher(levels.get(i)).matches())
-                    filtredLevels.add(logLines.get(i));
-            }
         }
 
-        return filtredLevels;
+
+        return filteredList;
     }
+
+    @Override
+    public int compareTo(ReadLogFile o) {
+        // return o.getDateTime().isBefore(getDateTime()) ? 1 : 0;
+
+        int result = this.getDateTime().compareTo(o.getDateTime());
+
+        return result;
+    }
+
+//    public ArrayList<String> levelFilter(String mask, ArrayList<String> arrayOfLogLines ) {
+//
+//        ArrayList<String> filteredLevels = new ArrayList<>();
+//        WorkWithArgs checkMask = new WorkWithArgs();
+//        String[] maskArray = mask.split(",");
+//
+//
+//
+//        for(String m : maskArray) {
+//
+//            m=checkMask.convertMask(m);
+//            Pattern p = Pattern.compile(m);
+//
+//            for (int i = 0; i < levels.size(); i++) {
+//                if (p.matcher(levels.get(i)).matches())
+//                    filteredLevels.add(arrayOfLogLines.get(i));
+//            }
+//        }
+//
+//        filteredLevels.sort(String::compareTo);
+//
+//
+//        return filteredLevels;
+//    }
 
 }
 
