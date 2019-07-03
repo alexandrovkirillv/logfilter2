@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -20,13 +18,8 @@ public class Main {
             String endDateTime = "";
             String periodTime = "";
             String outputFileName = "";
-            String strict= "";
+            String status= "";
             String logFileName = "";
-
-
-
-
-
 
             for(String s : args){
                 if(s.contains(".log")){
@@ -34,18 +27,23 @@ public class Main {
                     logFileName=s;
                 }
                 else if (s.equals("--strict")){
-                    strict=s;
+                    status=s;
                 }
 
+                else if ((s.equals("-f"))||(s.equals("--follow"))){
+
+                    status=s;
+                }
             }
 
+
             ReadLogFile RLF = new ReadLogFile(LocalDateTime.now(),"","","");
-            RLF.read(strict,logFileName);
+            RLF.read(status,logFileName);
 
             ArrayList<ReadLogFile> finSort = new ArrayList<>(RLF.getArrayLogLines());
             ArrayList<ReadLogFile> sortTemp = new ArrayList<>();
 
-           // Stat stat = new Stat("",1);
+            Stat stat = new Stat("",1);
 
 
              for (int i=0; i <args.length; i++){
@@ -68,19 +66,21 @@ public class Main {
                          outputFileName= args[i+1];
                          break;
 
-//                     case "-l":
-//                         String mask = args[i+1];
-//                         sortTemp.addAll(RLF.levelFilter(mask,finSort));
-//                         finSort.clear();
-//                         finSort.addAll(sortTemp);
-//                         break;
+                     case "-l":
+                         String mask = args[i+1];
+                         sortTemp.addAll(RLF.levelFilter(mask,finSort));
+                         finSort.clear();
+
+                         finSort.addAll(sortTemp);
+                         sortTemp.clear();
+                         break;
 
                      case "-m":
-                         String mask = args[i+1];
+                         mask = args[i+1];
                          String field = "message";
                          sortTemp.addAll(RLF.filter(mask,field,finSort));
-
                          finSort.clear();
+
                          finSort.addAll(sortTemp);
                          sortTemp.clear();
 
@@ -90,22 +90,18 @@ public class Main {
                          mask = args[i+1];
                          field = "name";
                          sortTemp.addAll(RLF.filter(mask,field,finSort));
-
                          finSort.clear();
+
                          finSort.addAll(sortTemp);
                          sortTemp.clear();
-
-
                          break;
 
-//                     case "-f":
-
-//                     case "-c" :
-//                         stat.showStat(logFileName);
-//                         break;
-//                     case "--stats":
-//                         stat.showStat(logFileName);
-//                         break;
+                     case "-c" :
+                         stat.showStat(finSort);
+                         break;
+                     case "--stats":
+                         stat.showStat(finSort);
+                         break;
 
                  }
 
@@ -116,39 +112,50 @@ public class Main {
 
              if ((!startDateTime.equals(""))&&(!endDateTime.equals(""))) {
 
-                 RLF.durationBetween2Dates(startDateTime, endDateTime);
+                 finSort=RLF.durationBetween2Dates(startDateTime, endDateTime);
              }
 
 
              if ((!startDateTime.equals(""))&&(!periodTime.equals(""))) {
 
-                 RLF.getLogLinesWithStartAndPeriod(periodTime, startDateTime);
+                 finSort=RLF.getLogLinesWithStartAndPeriod(periodTime, startDateTime);
              }
 
             if ((!endDateTime.equals(""))&&(!periodTime.equals(""))) {
 
-                RLF.getLogLinesWithEndAndPeriod(periodTime, endDateTime);
+                finSort= RLF.getLogLinesWithEndAndPeriod(periodTime, endDateTime);
             }
 
 
+            if (finSort.equals(RLF.getArrayLogLines()))
+                finSort.clear();
 
 
             Set<ReadLogFile> readLogFileSet = new TreeSet<>();
             readLogFileSet.addAll(finSort);
 
 
-
-          for(ReadLogFile s : readLogFileSet)
-                 System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
+            for(ReadLogFile s : readLogFileSet)
+                System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
 
 
 
             boolean contains = Arrays.stream(args).anyMatch("-o"::equals);
 
                 if (contains) {
-                    FileWriter nFile = new FileWriter(outputFileName);
-                    nFile.write("asd");
-                    nFile.close();
+
+                    try(FileWriter writer = new FileWriter(outputFileName))
+                    {
+                        for(ReadLogFile s : readLogFileSet){
+                        writer.write(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
+                        writer.write('\n');
+                        }
+                        writer.flush();
+                    }
+                    catch(IOException ex){
+
+                        System.out.println(ex.getMessage());
+                    }
                 }
 
 
