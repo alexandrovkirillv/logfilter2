@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="logfilter:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/logfilter_jar</output-path>
+    <root id="archive" name="logfilter.jar">
+      <element id="module-output" name="logfilter" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/mapvine/gradle-cobertura-plugin/1.0/gradle-cobertura-plugin-1.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
