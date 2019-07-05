@@ -37,13 +37,15 @@ public class Main {
             }
 
 
-            ReadLogFile RLF = new ReadLogFile(LocalDateTime.now(),"","","");
-            RLF.read(status,logFileName);
+            ReadLogFile RLF = new ReadLogFile();
+            ReadLogFile.read(status,logFileName);
 
             ArrayList<ReadLogFile> finSort = new ArrayList<>(RLF.getArrayLogLines());
+
+
             ArrayList<ReadLogFile> sortTemp = new ArrayList<>();
 
-            Stat stat = new Stat("",1);
+            Stat stat = new Stat();
 
 
              for (int i=0; i <args.length; i++){
@@ -68,7 +70,7 @@ public class Main {
 
                      case "-l":
                          String mask = args[i+1];
-                         sortTemp.addAll(RLF.levelFilter(mask,finSort));
+                         sortTemp.addAll(ReadLogFile.levelFilter(mask,finSort));
                          finSort.clear();
 
                          finSort.addAll(sortTemp);
@@ -78,7 +80,7 @@ public class Main {
                      case "-m":
                          mask = args[i+1];
                          String field = "message";
-                         sortTemp.addAll(RLF.filter(mask,field,finSort));
+                         sortTemp.addAll(ReadLogFile.filter(mask,field,finSort));
                          finSort.clear();
 
                          finSort.addAll(sortTemp);
@@ -89,7 +91,7 @@ public class Main {
                      case "-t":
                          mask = args[i+1];
                          field = "name";
-                         sortTemp.addAll(RLF.filter(mask,field,finSort));
+                         sortTemp.addAll(ReadLogFile.filter(mask,field,finSort));
                          finSort.clear();
 
                          finSort.addAll(sortTemp);
@@ -110,39 +112,35 @@ public class Main {
 
 
 
-             if ((!startDateTime.equals(""))&&(!endDateTime.equals(""))) {
-
-                 finSort=RLF.durationBetween2Dates(startDateTime, endDateTime);
-             }
+             if ((!startDateTime.equals(""))&&(!endDateTime.equals("")))
+                 finSort = RLF.durationBetween2Dates(startDateTime, endDateTime,finSort);
 
 
-             if ((!startDateTime.equals(""))&&(!periodTime.equals(""))) {
+             if ((!startDateTime.equals(""))&&(!periodTime.equals("")))
+                 finSort = RLF.logLinesWithStartAndPeriod(periodTime, startDateTime,finSort);
 
-                 finSort=RLF.getLogLinesWithStartAndPeriod(periodTime, startDateTime);
-             }
-
-            if ((!endDateTime.equals(""))&&(!periodTime.equals(""))) {
-
-                finSort= RLF.getLogLinesWithEndAndPeriod(periodTime, endDateTime);
-            }
+            if ((!endDateTime.equals(""))&&(!periodTime.equals("")))
+                finSort = RLF.logLinesWithEndAndPeriod(periodTime, endDateTime,finSort);
 
 
-            if (finSort.equals(RLF.getArrayLogLines()))
+
+
+            if (finSort.isEmpty())
+                System.out.println("Nothing found");
+
+            if ((Arrays.asList(args).contains("-c"))||(Arrays.asList(args).contains("--stats")))
                 finSort.clear();
-
 
             Set<ReadLogFile> readLogFileSet = new TreeSet<>();
             readLogFileSet.addAll(finSort);
+
 
 
             for(ReadLogFile s : readLogFileSet)
                 System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
 
 
-
-            boolean contains = Arrays.stream(args).anyMatch("-o"::equals);
-
-                if (contains) {
+                if (Arrays.asList(args).contains("-o")) {
 
                     try(FileWriter writer = new FileWriter(outputFileName))
                     {

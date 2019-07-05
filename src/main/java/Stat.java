@@ -6,12 +6,15 @@ public class Stat extends ReadLogFile{
 
     private String inputName;
     private int id;
-    private ArrayList<String> numbersOfLinesGroupedByPercent = new ArrayList<>();
+    private static ArrayList<String> numbersOfLinesGroupedByPercent = new ArrayList<>();
 
     public Stat( String inputName, int id) {
 
         this.inputName = inputName;
         this.id = id;
+    }
+    public Stat(){
+
     }
 
     public String getInputName() {
@@ -23,9 +26,10 @@ public class Stat extends ReadLogFile{
     }
 
 
-public void showStat (ArrayList<ReadLogFile> logFileArrayList) {
+public static ArrayList<Stat> showStat (ArrayList<ReadLogFile> logFileArrayList) {
 
         List<Stat> arrayList = new ArrayList<>();
+        ArrayList<Stat> arrayListStat = new ArrayList<>();
 
         ArrayList names = new ArrayList();
 
@@ -50,9 +54,19 @@ public void showStat (ArrayList<ReadLogFile> logFileArrayList) {
         System.out.println("Most encountered thread name: " + arrayList.get(arrayList.size()-1).getInputName());
         System.out.println("Least encountered thread name: " + arrayList.get(0).getInputName());
 
+
+        arrayListStat.add(new Stat("Number Of Log Lines: " ,logFileArrayList.size()));
+        arrayListStat.add(new Stat("Average time between the log lines(Millis): " + averageTimeBetweenTheLogLines(logFileArrayList),2));
+        arrayListStat.add(new Stat("Numbers Of Lines Grouped By Log Levels: " + numbersOfLinesGroupedByLogLevels(logFileArrayList),3));
+        arrayListStat.add(new Stat("Numbers Of Lines Grouped By Percent: " + numbersOfLinesGroupedByPercent,4));
+        arrayListStat.add(new Stat("Number Of Unique Names: " ,unique.size()));
+        arrayListStat.add(new Stat(arrayList.get(arrayList.size()-1).getInputName(),6));
+        arrayListStat.add(new Stat(arrayList.get(0).getInputName(),7));
+
+        return arrayListStat;
     }
 
-    public ArrayList numbersOfLinesGroupedByLogLevels(ArrayList<ReadLogFile> logFileArrayList) {
+    public static ArrayList numbersOfLinesGroupedByLogLevels(ArrayList<ReadLogFile> logFileArrayList) {
 
 
         ArrayList<String> numbersOfLinesByLevels = new ArrayList<>();
@@ -111,7 +125,8 @@ public void showStat (ArrayList<ReadLogFile> logFileArrayList) {
     }
 
 
-    public Long averageTimeBetweenTheLogLines(ArrayList<ReadLogFile> logFileArrayList) {
+    public static Long averageTimeBetweenTheLogLines(ArrayList<ReadLogFile> logFileArrayList) {
+
 
         ArrayList<Long> avTime = new ArrayList<>();
         long avTimeLog = 0;
