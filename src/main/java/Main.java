@@ -8,10 +8,10 @@ public class Main {
 
 
 
-//           Scanner sc = new Scanner(new File("help.txt"));
-//           while (sc.hasNext()){
-//           System.out.println(sc.nextLine());}
-//           sc.close();
+           Scanner sc = new Scanner(new File("help.txt"));
+           while (sc.hasNext()){
+           System.out.println(sc.nextLine());}
+           sc.close();
 
 
             String startDateTime = "";
