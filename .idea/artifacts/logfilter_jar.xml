@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/logfilter_jar</output-path>
     <root id="archive" name="logfilter.jar">
       <element id="module-output" name="logfilter" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/mapvine/gradle-cobertura-plugin/1.0/gradle-cobertura-plugin-1.0.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Maven: org.jacoco:jacoco-maven-plugin:0.8.4" />
     </root>
   </artifact>
 </component>

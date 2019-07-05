@@ -6,7 +6,7 @@
 
     <groupId>log-filter</groupId>
     <artifactId>logfilter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.7-SNAPSHOT</version>
     <packaging>jar</packaging>
     <build>
 
@@ -29,25 +29,27 @@
                     <repoToken>DlvnbkvgMzCLtriGUaLo7UB4dnIezu96r</repoToken>
                 </configuration>
             </plugin>
-
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                    <check/>
-                </configuration>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- attached to Maven test phase -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-
-
-
-
-
 
     </build>
     <dependencies>
@@ -57,6 +59,13 @@
         <version>4.13-beta-3</version>
         <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.4</version>
+        </dependency>
+
 
     </dependencies>
 
