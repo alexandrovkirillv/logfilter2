@@ -19,15 +19,17 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     private String message ="";
     private static int strictCount=0;
     private static int numberOfLogLines = 0;
-
     private static Set<ReadLogFile> arrayLogLines = new TreeSet<>();
-
 
     public ReadLogFile(LocalDateTime dateTime, String level, String name, String message) {
         this.dateTime = dateTime;
         this.level = level;
         this.name = name;
         this.message = message;
+    }
+
+    public static int getStrictCount() {
+        return strictCount;
     }
 
 
@@ -79,6 +81,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             while (!SIGINT.equals(in.next())) {
 
                 String str = (in.nextLine().replaceAll("[\\s]{2,}", " "));
+                if (strictCount==0)
                 getData(str,status);
 
 
@@ -124,16 +127,14 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         }
 
 
-
-
-
         if (strictCount==0)
             arrayLogLines.add(new ReadLogFile(dateTimeTemp,subStr[1],subStr[3].substring(0, subStr[3].length() - 1),messageStr));
 
-        if ((strictCount>0)&&(status.equals("--strict"))){
-            System.exit(1);
+        if (!status.equals("--strict"))
+            strictCount=0;
 
-        }
+
+
         messageStr = "";
         numberOfLogLines++;
 
