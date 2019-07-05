@@ -9,7 +9,9 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <build>
+
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -30,7 +32,9 @@
                     <check />
                 </configuration>
             </plugin>
+
         </plugins>
+
 
     </build>
     <dependencies>
@@ -41,6 +45,7 @@
         <scope>test</scope>
         </dependency>
     </dependencies>
+
 
 
 </project>
