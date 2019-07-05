@@ -6,7 +6,14 @@ import java.util.*;
 public class Main {
         public static void main(String[] args) throws IOException {
 
-//-------------------??????? ????????? ?? ?????-----------------------
+/**
+ * This is a utility which allows to filter log lines and collect the statistics.
+ *
+ * @autor Alexandrov Kirill
+ *
+ * @version 0.1
+
+ */
 
            Scanner sc = new Scanner(new File("help.txt"));
            while (sc.hasNext()){

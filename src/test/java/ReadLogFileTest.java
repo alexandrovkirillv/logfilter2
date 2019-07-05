@@ -35,11 +35,6 @@ public class ReadLogFileTest {
         logFileArrayList.clear();
     }
 
-    @Test
-    public void read() {
-
-    }
-
 
     @Test
     public void filter() {
