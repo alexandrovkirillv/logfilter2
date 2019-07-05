@@ -54,6 +54,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     }
 
 
+
     public static Set<ReadLogFile> read(String status,String logFileName) throws FileNotFoundException {
 
         String messageStr = "";

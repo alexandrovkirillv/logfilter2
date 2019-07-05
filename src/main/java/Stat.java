@@ -54,15 +54,6 @@ public static ArrayList<Stat> showStat (ArrayList<ReadLogFile> logFileArrayList)
         System.out.println("Most encountered thread name: " + arrayList.get(arrayList.size()-1).getInputName());
         System.out.println("Least encountered thread name: " + arrayList.get(0).getInputName());
 
-
-        arrayListStat.add(new Stat("Number Of Log Lines: " ,logFileArrayList.size()));
-        arrayListStat.add(new Stat("Average time between the log lines(Millis): " + averageTimeBetweenTheLogLines(logFileArrayList),2));
-        arrayListStat.add(new Stat("Numbers Of Lines Grouped By Log Levels: " + numbersOfLinesGroupedByLogLevels(logFileArrayList),3));
-        arrayListStat.add(new Stat("Numbers Of Lines Grouped By Percent: " + numbersOfLinesGroupedByPercent,4));
-        arrayListStat.add(new Stat("Number Of Unique Names: " ,unique.size()));
-        arrayListStat.add(new Stat(arrayList.get(arrayList.size()-1).getInputName(),6));
-        arrayListStat.add(new Stat(arrayList.get(0).getInputName(),7));
-
         return arrayListStat;
     }
 

@@ -6,7 +6,7 @@ import java.util.*;
 public class Main {
         public static void main(String[] args) throws IOException {
 
-
+//-------------------??????? ????????? ?? ?????-----------------------
 
            Scanner sc = new Scanner(new File("help.txt"));
            while (sc.hasNext()){
@@ -47,6 +47,7 @@ public class Main {
 
             Stat stat = new Stat();
 
+//----------------------????????? ?????????--------------------------
 
              for (int i=0; i <args.length; i++){
 
@@ -148,7 +149,7 @@ public class Main {
 
              }
 
-
+//---------------------------??????? ?????? ?? ??????? -----------------------------------------
 
 
              if ((!startDateTime.equals(""))&&(!endDateTime.equals("")))
@@ -170,18 +171,20 @@ public class Main {
             if ((Arrays.asList(args).contains("-c"))||(Arrays.asList(args).contains("--stats")))
                 finSort.clear();
 
+
+
+
             Set<ReadLogFile> readLogFileSet = new TreeSet<>();
             readLogFileSet.addAll(finSort);
 
-
-
+//-------------------------????? ??????????----------------------------------------------
 
             for(ReadLogFile s : readLogFileSet)
                 System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
             if ((readLogFiles.getStrictCount()>0)&&(status.equals("--strict")))
                 System.exit(1);
 
-
+//---------------------------------?????? ? ????----------------------------------------------
                 if (Arrays.asList(args).contains("-o")) {
 
                     try(FileWriter writer = new FileWriter(outputFileName))
