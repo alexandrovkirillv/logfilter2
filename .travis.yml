@@ -6,6 +6,8 @@ cache:
   directories:
     - $HOME/.m2
 
+env:
+  - CODECOV_TOKEN=<2a1f32c1-15d6-46d3-bca3-92a6a2797eea>#IF ONLY YOU HAVE A PRIVATE REPOSITORY
 
 
 script:
