@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
@@ -35,6 +37,36 @@ public class ReadLogFileTest {
         logFileArrayList.clear();
     }
 
+
+    @Test
+    public void read() throws FileNotFoundException {
+
+
+        String status = "";
+        String logFileName = "example.log";
+
+        ArrayList<ReadLogFile> actual = new ArrayList<>();
+
+        actual.add(logFileArrayList.get(0));
+        actual.add(logFileArrayList.get(1));
+        actual.add(logFileArrayList.get(2));
+        actual.add(logFileArrayList.get(3));
+
+
+        ArrayList<ReadLogFile> expected = new ArrayList<>(ReadLogFile.read(status,logFileName));
+
+
+        assertEquals(expected.get(0).getDateTime(),actual.get(0).getDateTime());
+        assertEquals(expected.get(1).getDateTime(),actual.get(1).getDateTime());
+        assertEquals(expected.get(2).getDateTime(),actual.get(2).getDateTime());
+        assertEquals(expected.get(3).getDateTime(),actual.get(3).getDateTime());
+
+
+        actual.clear();
+        expected.clear();
+
+
+    }
 
     @Test
     public void filter() {
@@ -178,6 +210,7 @@ public class ReadLogFileTest {
 
 
         assertEquals(actual, expected);
+        System.out.println("--------");
         actual.clear();
         expected.clear();
 
@@ -195,8 +228,30 @@ public class ReadLogFileTest {
 
 
         assertEquals(actual, expected);
+        System.out.println("--------");
         actual.clear();
         expected.clear();
+
+
+
+        startDateTimeString = "19-05-23T20:58:15.564Z";
+        period = "PT1W";
+
+
+        actual.add(logFileArrayList.get(1));
+        actual.add(logFileArrayList.get(2));
+        actual.add(logFileArrayList.get(3));
+
+
+
+        expected = ReadLogFile.logLinesWithStartAndPeriod(period,startDateTimeString,logFileArrayList);
+
+
+        assertEquals(actual, expected);
+        System.out.println("--------");
+        actual.clear();
+        expected.clear();
+
 
 
     }

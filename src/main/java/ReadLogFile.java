@@ -31,7 +31,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     private String name = "";
     private String message ="";
     private static int strictCount=0;
-    private static int numberOfLogLines = 0;
+
     private static Set<ReadLogFile> arrayLogLines = new TreeSet<>();
 
     public ReadLogFile(LocalDateTime dateTime, String level, String name, String message) {
@@ -70,7 +70,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
     public static Set<ReadLogFile> read(String status,String logFileName) throws FileNotFoundException {
 
-        String messageStr = "";
+
         String SIGINT = "SIGINT";
         try {
             Scanner sc = new Scanner(new File(logFileName));
@@ -150,7 +150,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
 
         messageStr = "";
-        numberOfLogLines++;
+
 
         Set<ReadLogFile> arrayLogLinesNew = new TreeSet<ReadLogFile>(arrayLogLines);
         return arrayLogLinesNew;
