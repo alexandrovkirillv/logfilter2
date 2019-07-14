@@ -1,3 +1,5 @@
+-h, --help                      Print this help on the standard output.
+
 -f, --follow 		            Follow log data. This option causes filter
          			            to not stop when end of file is reached, but wait
  		        	            for additional data to be appended to the input.

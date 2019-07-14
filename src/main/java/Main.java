@@ -13,13 +13,6 @@ import java.util.*;
 public class Main {
         public static void main(String[] args) throws IOException {
 
-           Scanner sc = new Scanner(new File("help.txt"));
-           while (sc.hasNext()){
-           System.out.println(sc.nextLine());}
-           sc.close();
-
-            System.out.println("");
-
 
             String startDateTime = "";
             String endDateTime = "";
@@ -158,42 +151,49 @@ public class Main {
 
 
 
-
              if ((!startDateTime.equals(""))&&(!endDateTime.equals("")))
                  finSort = readLogFiles.durationBetween2Dates(startDateTime, endDateTime,finSort);
 
-
              if ((!startDateTime.equals(""))&&(!periodTime.equals("")))
                  finSort = readLogFiles.logLinesWithStartAndPeriod(periodTime, startDateTime,finSort);
-
-            if ((!endDateTime.equals(""))&&(!periodTime.equals("")))
+             if ((!endDateTime.equals(""))&&(!periodTime.equals("")))
                 finSort = readLogFiles.logLinesWithEndAndPeriod(periodTime, endDateTime,finSort);
 
 
 
-
-            if (finSort.isEmpty())
+             if (finSort.isEmpty())
                 System.out.println("Nothing found");
 
-            if ((Arrays.asList(args).contains("-c"))||(Arrays.asList(args).contains("--stats")))
+             if ((Arrays.asList(args).contains("-c"))||(Arrays.asList(args).contains("--stats")))
                 finSort.clear();
 
+            for(String s : args){
+                if((s.contains("-h"))||(s.contains("--help"))){
+
+                    Scanner sc = new Scanner(new File("help.txt"));
+                    while (sc.hasNext())
+                        System.out.println(sc.nextLine());
+                    sc.close();
+                    finSort.clear();
+                }
+            }
 
 
 
-            Set<ReadLogFile> readLogFileSet = new TreeSet<>();
-            readLogFileSet.addAll(finSort);
+             Set<ReadLogFile> readLogFileSet = new TreeSet<>();
+             readLogFileSet.addAll(finSort);
 
 
 
-            for(ReadLogFile s : readLogFileSet)
+             for(ReadLogFile s : readLogFileSet)
                 System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
 
-            if ((readLogFiles.getStrictCount()>0)&&(status.equals("--strict")))
+              if ((readLogFiles.getStrictCount()>0)&&(status.equals("--strict")))
                 System.exit(1);
 
 
-                if (Arrays.asList(args).contains("-o")) {
+
+              if (Arrays.asList(args).contains("-o")) {
 
                     try(FileWriter writer = new FileWriter(outputFileName))
                     {

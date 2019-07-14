@@ -42,9 +42,6 @@ public static ArrayList<Stat> showStat (ArrayList<ReadLogFile> logFileArrayList)
         List<Stat> arrayList = new ArrayList<>();
         ArrayList<Stat> arrayListStat = new ArrayList<>();
 
-    for(ReadLogFile s : logFileArrayList) {
-        System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
-    }
         ArrayList names = new ArrayList();
 
         for (ReadLogFile r : logFileArrayList){
