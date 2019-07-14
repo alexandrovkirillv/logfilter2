@@ -2,23 +2,23 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
-public class Main {
-        public static void main(String[] args) throws IOException {
-
 /**
  * This is a utility which allows to filter log lines and collect the statistics.
  *
- * @autor Alexandrov Kirill
+ * @author Alexandrov Kirill
  *
- * @version 0.1
-
+ * @version 0.2
  */
+
+public class Main {
+        public static void main(String[] args) throws IOException {
 
            Scanner sc = new Scanner(new File("help.txt"));
            while (sc.hasNext()){
            System.out.println(sc.nextLine());}
            sc.close();
+
+            System.out.println("");
 
 
             String startDateTime = "";
@@ -54,7 +54,7 @@ public class Main {
 
             Stat stat = new Stat();
 
-//----------------------????????? ?????????--------------------------
+
 
              for (int i=0; i <args.length; i++){
 
@@ -156,7 +156,7 @@ public class Main {
 
              }
 
-//---------------------------??????? ?????? ?? ??????? -----------------------------------------
+
 
 
              if ((!startDateTime.equals(""))&&(!endDateTime.equals("")))
@@ -184,14 +184,15 @@ public class Main {
             Set<ReadLogFile> readLogFileSet = new TreeSet<>();
             readLogFileSet.addAll(finSort);
 
-//-------------------------????? ??????????----------------------------------------------
+
 
             for(ReadLogFile s : readLogFileSet)
                 System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
+
             if ((readLogFiles.getStrictCount()>0)&&(status.equals("--strict")))
                 System.exit(1);
 
-//---------------------------------?????? ? ????----------------------------------------------
+
                 if (Arrays.asList(args).contains("-o")) {
 
                     try(FileWriter writer = new FileWriter(outputFileName))

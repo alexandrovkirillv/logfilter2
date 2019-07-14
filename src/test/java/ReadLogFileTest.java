@@ -43,7 +43,7 @@ public class ReadLogFileTest {
 
 
         String status = "";
-        String logFileName = "example.log";
+        String logFileName = "testExample.log";
 
         ArrayList<ReadLogFile> actual = new ArrayList<>();
 
@@ -215,7 +215,7 @@ public class ReadLogFileTest {
         expected.clear();
 
         startDateTimeString = "19-05-23T20:58:15.564Z";
-        period = "PT1D";
+        period = "P1D";
 
 
         actual.add(logFileArrayList.get(1));
@@ -235,7 +235,7 @@ public class ReadLogFileTest {
 
 
         startDateTimeString = "19-05-23T20:58:15.564Z";
-        period = "PT1W";
+        period = "P1W";
 
 
         actual.add(logFileArrayList.get(1));

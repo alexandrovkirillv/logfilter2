@@ -10,12 +10,12 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @return method read() return Set with fields  : localdate, level, name, message.
- *         methods durationBetween2Dates() ,logLinesWithStartAndPeriod(),
- *         logLinesWithEndAndPeriod() return filtered by time period log lines
+ * @return method read() is reading file and returns Set of objects with  fields (localdate, level, name, message);
+ *         methods durationBetween2Dates(), logLinesWithStartAndPeriod(),
+ *         logLinesWithEndAndPeriod() returns filtered by time period log lines;
  *         methods filter() and linesFilter() returns log filtered lines by level, name, message.
  *
- * @autor Alexandrov Kirill
+ * @author Alexandrov Kirill
 
  * @version 0.2
 
@@ -23,16 +23,15 @@ import java.util.regex.Pattern;
 
 public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
-    public ReadLogFile() {
-    }
-
     private LocalDateTime dateTime = LocalDateTime.now();
     private String level = "";
     private String name = "";
     private String message ="";
     private static int strictCount=0;
-
     private static Set<ReadLogFile> arrayLogLines = new TreeSet<>();
+
+    public ReadLogFile() {
+    }
 
     public ReadLogFile(LocalDateTime dateTime, String level, String name, String message) {
         this.dateTime = dateTime;
@@ -68,10 +67,11 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
 
 
-    public static Set<ReadLogFile> read(String status,String logFileName) throws FileNotFoundException {
-
+    public static Set<ReadLogFile> read(String status,String logFileName)  {
 
         String SIGINT = "SIGINT";
+
+
         try {
             Scanner sc = new Scanner(new File(logFileName));
 
@@ -84,24 +84,26 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             sc.close();
         }
         catch (FileNotFoundException e){
-            System.out.println("File Not Found");
+            System.out.println("File not found");
             System.exit(0);
         }
 
         if ((status.equals("-f"))||(status.equals("--follow"))) {
+            String str;
 
             Scanner in = new Scanner(System.in);
             System.out.println("Input log line(print 'SIGINT' for result): ");
-            while (!SIGINT.equals(in.next())) {
+            while (!(str = in.nextLine()).equals(SIGINT)) {
 
-                String str = (in.nextLine().replaceAll("[\\s]{2,}", " "));
-                if (strictCount==0)
-                getData(str,status);
+                str = str.replaceAll("[\\s]{2,}", " ");
+
+                getData(str, status);
 
 
             }
             in.close();
         }
+
 
         return arrayLogLines;
     }
@@ -110,8 +112,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
         String[] subStr= Str.split(" ");
         String messageStr = "";
-
-
 
         LocalDateTime dateTimeTemp = LocalDateTime.now();
 
@@ -122,23 +122,36 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         catch (Exception e) {
 
             strictCount++;
+
              }
 
-
-        if ((!subStr[1].equals("TRACE"))&&(!subStr[1].equals("ERROR"))&&(!subStr[1].equals("DEBUG"))&&(!subStr[1].equals("INFO"))&&(!subStr[1].equals("WARN"))){
-            strictCount++;
+        try{
+            if ((!subStr[1].equals("TRACE"))&&(!subStr[1].equals("ERROR"))&&(!subStr[1].equals("DEBUG"))&&(!subStr[1].equals("INFO"))&&(!subStr[1].equals("WARN"))){
+                strictCount++;
             }
+        }catch (java.lang.ArrayIndexOutOfBoundsException e){
 
-
-        if ((!subStr[2].contains("["))||(!subStr[3].contains("]"))||(subStr[3].length()>17)){
-            strictCount++;
-            }
-
-        for (int g = 4; g != subStr.length; g++) {
-
-            messageStr += subStr[g];
-            messageStr += " ";
         }
+
+
+
+        try {
+            if ((!subStr[2].contains("["))||(!subStr[3].contains("]"))||(subStr[3].length()>17))
+                strictCount++;
+        }catch (java.lang.ArrayIndexOutOfBoundsException e){
+
+        }
+        try {
+            for (int g = 4; g != subStr.length; g++) {
+
+                messageStr += subStr[g];
+                messageStr += " ";
+            }
+        }catch (java.lang.ArrayIndexOutOfBoundsException e){
+
+
+        }
+
 
 
         if (strictCount==0)
@@ -149,10 +162,8 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
 
 
-        messageStr = "";
-
-
         Set<ReadLogFile> arrayLogLinesNew = new TreeSet<ReadLogFile>(arrayLogLines);
+
         return arrayLogLinesNew;
 
     }
@@ -161,11 +172,9 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     public static ArrayList<ReadLogFile> durationBetween2Dates(String startDateTimeString, String endDateTimeString,ArrayList<ReadLogFile> arrayOfLogLines) {
 
 
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
-
         return linesBetween2Dates(startDateTime,endDateTime,arrayOfLogLines);
 
     }
@@ -184,19 +193,18 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
                 endDateTime = startDateTime.plusDays(p.getDays());
             } catch (Exception e){
                 System.out.println("Wrong period format");
+                System.exit(0);
             }
-
         }
 
         else {
 
             try {
-
-
                 Duration duration = Duration.parse(durationString);
                 endDateTime = startDateTime.plusNanos(duration.toNanos());
             }catch (Exception e){
                 System.out.println("Wrong period format");
+                System.exit(0);
             }
         }
 
@@ -208,7 +216,17 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     public static ArrayList<ReadLogFile> logLinesWithEndAndPeriod(String durationString, String endDateTimeString, ArrayList<ReadLogFile> arrayOfLogLines) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
+        LocalDateTime endDateTime = LocalDateTime.now();
+
+        try{
+           endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
+        }
+        catch (java.time.format.DateTimeParseException e){
+            System.out.println("Wrong DateTime format");
+            System.exit(0);
+
+        }
+
 
         LocalDateTime startDateTime = LocalDateTime.now();
 
@@ -220,6 +238,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             catch (Exception e)
             {
                 System.out.println("Wrong period format");
+                System.exit(0);
             }
 
         }
@@ -232,6 +251,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
                     catch (Exception e){
                         System.out.println("Wrong period format");
+                        System.exit(0);
                     }
         }
 
@@ -248,31 +268,24 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         for (int k = 0; k< arrayOfLogLines.size();k++) {
             if  (arrayOfLogLines.get(k).dateTime.isAfter(startDateTime)) {
                 i = k;
-
                 break;
             }
         }
 
 
         for (int k = 0; k< arrayOfLogLines.size();k++) {
-
-            if (arrayOfLogLines.get(k).dateTime.isBefore(endDateTime)){
+            if (arrayOfLogLines.get(k).dateTime.isBefore(endDateTime))
                 g=k;
-
-
-            }
         }
 
-        if (i>g)
+        if (i>g){
             System.out.println("Nothing found, End time is before or equal Start time");
+            System.exit(1);}
 
         else {
 
-            for (int b = i; b<=g; b++) {
-
+            for (int b = i; b<=g; b++)
                 filteredList.add(arrayOfLogLines.get(b));
-            }
-
 
         }
 
@@ -282,11 +295,8 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     public static ArrayList<ReadLogFile> filter(String mask, String field, ArrayList<ReadLogFile> arrayOfLogLinesFiltered) {
 
         ArrayList<ReadLogFile> filteredList = new ArrayList<>();
-        WorkWithArgs checkMask = new WorkWithArgs();
 
-
-
-        mask = checkMask.convertMask(mask);
+        mask = convertMask(mask);
         Pattern p = Pattern.compile(mask);
 
         if (field.equals("name")) {
@@ -313,9 +323,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
         }
 
-
-
-
         return filteredList;
     }
 
@@ -329,13 +336,13 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
     public static ArrayList<ReadLogFile> levelFilter(String mask, ArrayList<ReadLogFile> arrayOfLogLinesFiltered) {
 
-        WorkWithArgs checkMask = new WorkWithArgs();
+
         String[] maskArray = mask.split(",");
         List<ReadLogFile> toRemove = new ArrayList<>();
 
             for (ReadLogFile logLine : arrayOfLogLinesFiltered){
                 for(String m : maskArray) {
-                    m = checkMask.convertMask(m);
+                    m = convertMask(m);
                     Pattern p = Pattern.compile(m);
 
                     if (p.matcher(logLine.getLevel()).matches())
@@ -349,22 +356,24 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         return arrayOfLogLinesFiltered;
     }
 
-    public static ArrayList<ReadLogFile> filterForMass (String mask, ArrayList<ReadLogFile> arrayOfLogLinesFiltered){
+    public static String convertMask(String mask){
 
-        WorkWithArgs checkMask = new WorkWithArgs();
-        ArrayList<ReadLogFile> filteredLevels = new ArrayList<>();
-
-        for (ReadLogFile logLine : arrayOfLogLinesFiltered) {
-
-            mask = checkMask.convertMask(mask);
-            Pattern p = Pattern.compile(mask);
-
-            if (!p.matcher(logLine.getLevel()).matches())
-                filteredLevels.add(logLine);
-
-
+        ArrayList<Character> charsA = new ArrayList<Character>();
+        for (char c : mask.toCharArray()) {
+            charsA.add(c);
         }
-        return filteredLevels;
+
+        if ((charsA.get(charsA.size()-1).equals('*'))||(charsA.get(0).equals('*'))){
+            mask = mask.replaceAll("[*]", "\\.\\*");
+        }
+
+        else if((charsA.get(charsA.size()-1).equals('?'))||(charsA.get(0).equals('?'))){
+            mask = mask.replaceAll("[?]", "\\.\\?");
+        }
+
+
+        return mask;
+
     }
 
 }

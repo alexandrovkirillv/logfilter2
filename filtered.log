@@ -1,0 +1,22 @@
+2019-05-23T20:57:20.564 INFO [main] Starting up an application 
+2019-05-23T20:57:25.872 INFO [main] Initializing a worker pool 
+2019-05-23T20:57:30.032 INFO [worker-1] Run task #1241 
+2019-05-23T20:57:32.421 INFO [worker-2] Run task #717 
+2019-05-23T20:57:33.843 INFO [main] Connecting to storage:3121 
+2019-05-23T20:57:58.931 INFO [worker-2] Task #717 has been completed 
+2019-05-23T20:57:59.001 INFO [main] Connection established 
+2019-05-23T20:58:14.315 WARN [worker-3] Run task #467 
+2019-05-23T20:58:15.917 WARN [worker-3] Task #467 is not configured 
+2019-05-23T20:58:34.143 DEBUG [worker-1] Task #1241 has been completed 
+2019-05-20:58:40.719 INFO [main] Application started successfully
+2019-05-23T20:58:44.242 INFO [worker-2] Run task #937 
+2019-05-23T20:58:56.964 dfROR [worker-3] Task #467 finished with fail
+2019-05-23T20:58:57.234 WARN [worker-3] Task #467 cannot be rescheduled 
+2019-05-23T20:59:21.622 INFO [main] DB health-check succeded 
+2019-05-23T20:59:32.421 ERROR [worker-1] Task #8272 crashed during startup 
+2019-05-23T20:59:33.186 DEBUG [worker-1] Task #8272 will be restarted 
+2019-05-23T20:59:33.642 WARN [worker-2] Task #937 has been completed 
+2019-05-23T20:59:39.037 INFO [worker-3] Run task #819 
+2019-05-23T20:59:43.146 INFO [worker-2] Run task #2911 
+2019-05-23T21:00:19.620 INFO [worker-3] Task #819 has been completed 
+2019-05-23T21:00:23.422 INFO [worker-2] Task #2911 has been completed 
