@@ -1,7 +1,11 @@
 package com.logfilter;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -67,21 +71,24 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     public static Set<ReadLogFile> read(String status, String logFileName) {
 
         String SIGINT = "SIGINT";
+        File f = new File(logFileName);
 
 
         try {
-            Scanner sc = new Scanner(new File(logFileName));
+            LineIterator it = FileUtils.lineIterator(f, "UTF-8");
 
-            while (sc.hasNext()) {
+            while (it.hasNext()) {
 
-                String str = (sc.nextLine().replaceAll("[\\s]{2,}", " "));
+                String str = (it.nextLine().replaceAll("[\\s]{2,}", " "));
                 getData(str, status);
 
             }
-            sc.close();
+            it.close();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
             System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if ((status.equals("-f")) || (status.equals("--follow"))) {
@@ -142,8 +149,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
                 messageStr += " ";
             }
         } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-
-
         }
 
 
@@ -164,7 +169,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
 
     public static ArrayList<ReadLogFile> durationBetween2Dates(String startDateTimeString, String endDateTimeString, ArrayList<ReadLogFile> arrayOfLogLines) {
-
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
