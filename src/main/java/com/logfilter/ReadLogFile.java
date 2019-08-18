@@ -71,7 +71,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     public static Set<ReadLogFile> read(String status, String logFileName) {
 
         String SIGINT = "SIGINT";
-        File f = new File(logFileName);
+        File f = new File("./src/main/resources/" + logFileName);
 
 
         try {
@@ -284,6 +284,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
         ArrayList<ReadLogFile> filteredList = new ArrayList<>();
         mask = convertMask(mask);
+
         Pattern p = Pattern.compile(mask);
 
         if (field.equals("name")) {
