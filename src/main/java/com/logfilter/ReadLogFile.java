@@ -1,5 +1,6 @@
 package com.logfilter;
 
+import com.readlog.ParseArgs;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
@@ -29,6 +30,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     private String level = "";
     private String name = "";
     private String message = "";
+    private static int stat = 0;
     private static int strictCount = 0;
     private static Set<ReadLogFile> arrayLogLines = new TreeSet<>();
 
@@ -68,11 +70,26 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     }
 
 
-    public static Set<ReadLogFile> read(String status, String logFileName) {
+    public static int getStat() {
+        return stat;
+    }
+
+    public static Set<ReadLogFile> read(String status, String[] args) {
+
+
+        ParseArgs parseArgs = new ParseArgs();
 
         String SIGINT = "SIGINT";
+        ArrayList<ParseArgs> argsList = parseArgs.parseArgs(args);
+        String logFileName = parseArgs.getLogFileName();
         File f = new File("./src/main/resources/" + logFileName);
+        ReadLogFile tempLog = new ReadLogFile();
+        int numberOfFilters = argsList.size();
+        int filterCounter = 0;
 
+        if (argsList.get(0).getField().equals("stat")){
+            stat =1;
+        }
 
         try {
             LineIterator it = FileUtils.lineIterator(f, "UTF-8");
@@ -80,10 +97,28 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             while (it.hasNext()) {
 
                 String str = (it.nextLine().replaceAll("[\\s]{2,}", " "));
-                getData(str, status);
+
+                for (ParseArgs p : argsList) {
+                    tempLog = p.getLogs().filter(p.getMask(), p.getField(), getData(str, status));
+
+                    if (!tempLog.getLevel().equals("")) {
+
+                        filterCounter++;
+
+                    }
+                }
+
+
+
+                if (filterCounter == numberOfFilters) {
+                    arrayLogLines.add(tempLog);
+                }
+                filterCounter = 0;
 
             }
             it.close();
+
+
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
             System.exit(0);
@@ -107,11 +142,12 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             in.close();
         }
 
-
         return arrayLogLines;
     }
 
-    public static Set<ReadLogFile> getData(String Str, String status) {
+    public static ReadLogFile getData(String Str, String status) {
+
+        ReadLogFile logLine = new ReadLogFile();
 
         String[] subStr = Str.split(" ");
         String messageStr = "";
@@ -153,17 +189,14 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
 
         if (strictCount == 0) {
-            arrayLogLines.add(new ReadLogFile(dateTimeTemp, subStr[1], subStr[3].substring(0, subStr[3].length() - 1), messageStr));
+            logLine = new ReadLogFile(dateTimeTemp, subStr[1], subStr[3].substring(0, subStr[3].length() - 1), messageStr);
         }
 
         if (!status.equals("--strict")) {
             strictCount = 0;
         }
 
-
-        Set<ReadLogFile> arrayLogLinesNew = new TreeSet<ReadLogFile>(arrayLogLines);
-
-        return arrayLogLinesNew;
+        return logLine;
 
     }
 
@@ -280,32 +313,29 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         return filteredList;
     }
 
-    public static ArrayList<ReadLogFile> filter(String mask, String field, ArrayList<ReadLogFile> arrayOfLogLinesFiltered) {
+    public static ReadLogFile filter(String mask, String field, ReadLogFile logLine) {
 
-        ArrayList<ReadLogFile> filteredList = new ArrayList<>();
+        ReadLogFile filteredLine = new ReadLogFile();
         mask = convertMask(mask);
-
         Pattern p = Pattern.compile(mask);
 
         if (field.equals("name")) {
 
-            for (int i = 0; i < arrayOfLogLinesFiltered.size(); i++) {
-                if (!p.matcher(arrayOfLogLinesFiltered.get(i).name).matches()) {
-                    filteredList.add(arrayOfLogLinesFiltered.get(i));
-                }
+            if (!p.matcher(logLine.name).matches()) {
+                filteredLine = logLine;
+
             }
         } else if (field.equals("message")) {
 
-            for (int i = 0; i < arrayOfLogLinesFiltered.size(); i++) {
-                if (!p.matcher(arrayOfLogLinesFiltered.get(i).message).matches()) {
-                    filteredList.add(arrayOfLogLinesFiltered.get(i));
+            if (!p.matcher(logLine.message).matches()) {
+                filteredLine = logLine;
 
-                }
             }
-
+        } else if (field.equals("level")) {
+            filteredLine = levelFilter(mask, logLine);
         }
 
-        return filteredList;
+        return filteredLine;
     }
 
     @Override
@@ -316,25 +346,27 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         return result;
     }
 
-    public static ArrayList<ReadLogFile> levelFilter(String mask, ArrayList<ReadLogFile> arrayOfLogLinesFiltered) {
+    public static ReadLogFile levelFilter(String mask, ReadLogFile logLine) {
 
-
+        ReadLogFile filteredLine = new ReadLogFile();
         String[] maskArray = mask.split(",");
-        List<ReadLogFile> toRemove = new ArrayList<>();
+        int numberOfFilters = maskArray.length;
+        int filterCounter = 0;
 
-        for (ReadLogFile logLine : arrayOfLogLinesFiltered) {
-            for (String m : maskArray) {
-                m = convertMask(m);
-                Pattern p = Pattern.compile(m);
+        for (String m : maskArray) {
+            m = convertMask(m);
+            Pattern p = Pattern.compile(m);
 
-                if (p.matcher(logLine.getLevel()).matches())
-                    toRemove.add(logLine);
+            if (!p.matcher(logLine.getLevel()).matches()) {
+                filterCounter++;
             }
-
         }
-        arrayOfLogLinesFiltered.removeAll(toRemove);
+        if (filterCounter == numberOfFilters) {
 
-        return arrayOfLogLinesFiltered;
+            filteredLine = logLine;
+        }
+
+        return filteredLine;
     }
 
     public static String convertMask(String mask) {

@@ -41,7 +41,7 @@ public class Stat extends ReadLogFile {
         List<Stat> arrayList = new ArrayList<>();
         ArrayList<Stat> arrayListStat = new ArrayList<>();
 
-        ArrayList names = new ArrayList();
+        ArrayList <String> names = new ArrayList<>();
 
         for (ReadLogFile r : logFileArrayList) {
 

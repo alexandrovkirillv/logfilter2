@@ -2,7 +2,6 @@ package com.readlog;
 
 import com.logfilter.Stat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ParseArgs extends Log {
 
@@ -10,7 +9,7 @@ public class ParseArgs extends Log {
     private String status;
     private String mask;
     private String field;
-    private ArrayList<ParseArgs> finalArgs = new ArrayList<>();
+    private ArrayList<ParseArgs> arrayList = new ArrayList<>();
     private Log log =new Log();
 
     public Log getLogs() {
@@ -58,33 +57,49 @@ public class ParseArgs extends Log {
                 case "-t":
 
                     NamesLog namesLog = new NamesLog();
-                    finalArgs.add(new ParseArgs(namesLog,args[i+1],"name"));
+                    arrayList.add(new ParseArgs(namesLog,args[i+1],"name"));
 
                     break;
 
                 case "--thread":
                     namesLog = new NamesLog();
-                    finalArgs.add(new ParseArgs(namesLog,args[i+1],"name"));
+                    arrayList.add(new ParseArgs(namesLog,args[i+1],"name"));
                     break;
 
                 case "-m":
 
                     MessageLog messageLog = new MessageLog();
-                    finalArgs.add(new ParseArgs(messageLog,args[i+1],"message"));
+                    arrayList.add(new ParseArgs(messageLog,args[i+1],"message"));
                     break;
 
                 case "--message":
 
                     messageLog = new MessageLog();
-                    finalArgs.add(new ParseArgs(messageLog,args[i+1],"message"));
+                    arrayList.add(new ParseArgs(messageLog,args[i+1],"message"));
                     break;
 
                 case "-c":
-                  //  stat.showStat(finSort);
+
+                    Log log = new Log();
+                    arrayList.add(new ParseArgs(log,"","stat"));
                     break;
 
                 case "--stats":
-                  //  stat.showStat(finSort);
+
+                    log = new Log();
+                    arrayList.add(new ParseArgs(log,"","stat"));
+                    break;
+
+                case "-l":
+
+                    LevelLog levelLog = new LevelLog();
+                    arrayList.add(new ParseArgs(levelLog,args[i+1],"level"));
+                    break;
+
+                case "--level":
+
+                    levelLog = new LevelLog();
+                    arrayList.add(new ParseArgs(levelLog,args[i+1],"level"));
                     break;
 
                   /*  case ("-s"):
@@ -115,64 +130,6 @@ public class ParseArgs extends Log {
                         outputFileName = args[i + 1];
                         break;
 
-                    case "-l":
-                        String mask = args[i + 1];
-                        sortTemp.addAll(ReadLogFile.levelFilter(mask, finSort));
-                        finSort.clear();
-
-                        finSort.addAll(sortTemp);
-                        sortTemp.clear();
-                        break;
-                    case "--level":
-                        mask = args[i + 1];
-                        sortTemp.addAll(ReadLogFile.levelFilter(mask, finSort));
-                        finSort.clear();
-
-                        finSort.addAll(sortTemp);
-                        sortTemp.clear();
-                        break;
-
-                    case "-m":
-                        mask = args[i + 1];
-                        String field = "message";
-                        sortTemp.addAll(ReadLogFile.filter(mask, field, finSort));
-                        finSort.clear();
-
-                        finSort.addAll(sortTemp);
-                        sortTemp.clear();
-                        break;
-
-                    case "--message":
-                        mask = args[i + 1];
-                        field = "message";
-                        sortTemp.addAll(ReadLogFile.filter(mask, field, finSort));
-                        finSort.clear();
-
-                        finSort.addAll(sortTemp);
-                        sortTemp.clear();
-
-                        break;
-
-                    case "-t":
-                        mask = args[i + 1];
-                        field = "name";
-                        sortTemp.addAll(ReadLogFile.filter(mask, field, finSort));
-                        finSort.clear();
-
-                        finSort.addAll(sortTemp);
-                        sortTemp.clear();
-                        break;
-                    case "--thread":
-                        mask = args[i + 1];
-                        field = "name";
-                        sortTemp.addAll(ReadLogFile.filter(mask, field, finSort));
-                        finSort.clear();
-
-                        finSort.addAll(sortTemp);
-                        sortTemp.clear();
-                        break;
-
-
                     */
 
             }
@@ -196,7 +153,7 @@ public class ParseArgs extends Log {
             }
         }
 
-        return finalArgs;
+        return arrayList;
     }
 
 }

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.logfilter.ReadLogFile.read;
+import static com.logfilter.Stat.showStat;
 
 /**
  * This is a utility which allows to filter log lines and collect the statistics.
@@ -26,35 +27,15 @@ public class Main {
         String status = "";
 
 
-        ParseArgs parseArgs = new ParseArgs();
-
-        ArrayList<ParseArgs> argsList = parseArgs.parseArgs(args);
-        String logFileName = parseArgs.getLogFileName();
-
         ReadLogFile readLogFiles = new ReadLogFile();
 
-        read(status, logFileName);
 
-        ArrayList<ReadLogFile> finSort = new ArrayList<>(readLogFiles.getArrayLogLines());
-        ArrayList<ReadLogFile> sortTemp = new ArrayList<>();
-        sortTemp.addAll(finSort);
+        ArrayList<ReadLogFile> finSort = new ArrayList<>(read(status, args));
 
-        System.out.println("mask is " + argsList.get(0).getMask() + ", field is " + argsList.get(0).getField());
-
-        for (int i = 0; i < argsList.size(); i++) {
-
-            finSort.clear();
-            finSort.addAll(argsList.get(i).getLogs().filter(argsList.get(i).getMask(), argsList.get(i).getField(), sortTemp));
-
-            for (ReadLogFile s : finSort) {
-                System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
-            }
-            System.out.println("------");
-
-            sortTemp.clear();
-            sortTemp.addAll(finSort);
-
+        if (readLogFiles.getStat()==1){
+            showStat(finSort);
         }
+
 
 
         if ((!startDateTime.equals("")) && (!endDateTime.equals(""))) {

@@ -8,7 +8,7 @@ public class MessageLog extends Log{
 
 
     @Override
-    public ArrayList<ReadLogFile> filter(String mask, String field, ArrayList<ReadLogFile> arrayList) {
+    public ReadLogFile filter(String mask, String field, ReadLogFile arrayList) {
 
       
         ReadLogFile readLogFile = new ReadLogFile();

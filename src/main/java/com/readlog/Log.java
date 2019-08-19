@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Log {
 
-    public ArrayList<ReadLogFile> filter(String mask, String field, ArrayList<ReadLogFile> arrayList){
+    public ReadLogFile filter(String mask, String field, ReadLogFile arrayList){
 
         return arrayList;
     }
