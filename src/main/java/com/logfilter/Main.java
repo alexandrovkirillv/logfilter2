@@ -1,9 +1,6 @@
 package com.logfilter;
 
-import com.readlog.*;
-
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.logfilter.ReadLogFile.read;
@@ -38,16 +35,16 @@ public class Main {
 
 
 
-        if ((!startDateTime.equals("")) && (!endDateTime.equals(""))) {
-            finSort = readLogFiles.durationBetween2Dates(startDateTime, endDateTime, finSort);
-        }
-
-        if ((!startDateTime.equals("")) && (!periodTime.equals(""))) {
-            finSort = readLogFiles.logLinesWithStartAndPeriod(periodTime, startDateTime, finSort);
-        }
-        if ((!endDateTime.equals("")) && (!periodTime.equals(""))) {
-            finSort = readLogFiles.logLinesWithEndAndPeriod(periodTime, endDateTime, finSort);
-        }
+//        if ((!startDateTime.equals("")) && (!endDateTime.equals(""))) {
+//            finSort = readLogFiles.durationBetween2Dates(startDateTime, endDateTime, finSort);
+//        }
+//
+//        if ((!startDateTime.equals("")) && (!periodTime.equals(""))) {
+//            finSort = readLogFiles.logLinesWithStartAndPeriod(periodTime, startDateTime, finSort);
+//        }
+//        if ((!endDateTime.equals("")) && (!periodTime.equals(""))) {
+//            finSort = readLogFiles.logLinesWithEndAndPeriod(periodTime, endDateTime, finSort);
+//        }
 
 
         if (finSort.isEmpty()) {

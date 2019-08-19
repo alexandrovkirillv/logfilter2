@@ -1,19 +1,19 @@
-package com.readlog;
+package com.ParseArgs;
 
 import com.logfilter.Stat;
 import java.util.ArrayList;
 
-public class ParseArgs extends Log {
+public class ParseArgs extends Arg {
 
     private String logFileName;
     private String status;
     private String mask;
     private String field;
     private ArrayList<ParseArgs> arrayList = new ArrayList<>();
-    private Log log =new Log();
+    private Arg arg =new Arg();
 
-    public Log getLogs() {
-        return log;
+    public Arg getLogs() {
+        return arg;
     }
 
     public String getMask() {
@@ -28,11 +28,11 @@ public class ParseArgs extends Log {
 
     }
 
-    public ParseArgs (Log log, String mask, String field){
+    public ParseArgs (Arg arg, String mask, String field){
 
         this.mask=mask;
         this.field=field;
-        this.log=log;
+        this.arg=arg;
 
 
     }
@@ -56,50 +56,68 @@ public class ParseArgs extends Log {
 
                 case "-t":
 
-                    NamesLog namesLog = new NamesLog();
-                    arrayList.add(new ParseArgs(namesLog,args[i+1],"name"));
+                    NameArg nameArg = new NameArg();
+                    arrayList.add(new ParseArgs(nameArg,args[i+1],"name"));
 
                     break;
 
                 case "--thread":
-                    namesLog = new NamesLog();
-                    arrayList.add(new ParseArgs(namesLog,args[i+1],"name"));
+                    nameArg = new NameArg();
+                    arrayList.add(new ParseArgs(nameArg,args[i+1],"name"));
                     break;
 
                 case "-m":
 
-                    MessageLog messageLog = new MessageLog();
-                    arrayList.add(new ParseArgs(messageLog,args[i+1],"message"));
+                    MessageArg messageArg = new MessageArg();
+                    arrayList.add(new ParseArgs(messageArg,args[i+1],"message"));
                     break;
 
                 case "--message":
 
-                    messageLog = new MessageLog();
-                    arrayList.add(new ParseArgs(messageLog,args[i+1],"message"));
+                    messageArg = new MessageArg();
+                    arrayList.add(new ParseArgs(messageArg,args[i+1],"message"));
                     break;
 
                 case "-c":
 
-                    Log log = new Log();
-                    arrayList.add(new ParseArgs(log,"","stat"));
+                    Arg log = new Arg();
+                    arrayList.add(new ParseArgs(arg,"","stat"));
                     break;
 
                 case "--stats":
 
-                    log = new Log();
-                    arrayList.add(new ParseArgs(log,"","stat"));
+                    arg = new Arg();
+                    arrayList.add(new ParseArgs(arg,"","stat"));
                     break;
 
                 case "-l":
 
-                    LevelLog levelLog = new LevelLog();
-                    arrayList.add(new ParseArgs(levelLog,args[i+1],"level"));
+                    LevelArg levelArg = new LevelArg();
+                    arrayList.add(new ParseArgs(levelArg,args[i+1],"level"));
                     break;
 
                 case "--level":
 
-                    levelLog = new LevelLog();
-                    arrayList.add(new ParseArgs(levelLog,args[i+1],"level"));
+                    levelArg = new LevelArg();
+                    arrayList.add(new ParseArgs(levelArg,args[i+1],"level"));
+                    break;
+
+                case ("-s"):
+                    StartDateArg startDateTime = new StartDateArg();
+                    arrayList.add(new ParseArgs(startDateTime,args[i+1],"start"));
+                    break;
+                case "--start":
+                    startDateTime = new StartDateArg();
+                    arrayList.add(new ParseArgs(startDateTime,args[i+1],"start"));
+                    break;
+
+                case "-e":
+                    EndDateArg endDateTime = new EndDateArg();
+                    arrayList.add(new ParseArgs(endDateTime, args[i+1],"end" ));
+                    break;
+                case "--end":
+                    endDateTime = new EndDateArg();
+                    arrayList.add(new ParseArgs(endDateTime, args[i+1],"end" ));
                     break;
 
                   /*  case ("-s"):

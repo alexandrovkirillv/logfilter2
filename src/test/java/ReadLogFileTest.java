@@ -139,136 +139,136 @@ public class ReadLogFileTest {
 //    }
 
 
-    @Test
-    public void durationBetween2Dates() {
-
-        String startDateTimeString = "19-05-23T20:56:20.564Z";
-        String endDateTimeString = "19-05-23T20:58:55.564Z";
-
-
-        ArrayList<ReadLogFile> actual = new ArrayList<>();
-
-        actual.add(logFileArrayList.get(0));
-        actual.add(logFileArrayList.get(1));
-
-
-        ArrayList<ReadLogFile> expected = ReadLogFile.durationBetween2Dates(startDateTimeString, endDateTimeString, logFileArrayList);
-
-
-        assertEquals(actual, expected);
-        actual.clear();
-        expected.clear();
-
-
-        startDateTimeString = "19-05-23T19:56:20.564Z";
-        endDateTimeString = "19-05-23T21:58:55.564Z";
-
-
-        actual.add(logFileArrayList.get(0));
-        actual.add(logFileArrayList.get(1));
-        actual.add(logFileArrayList.get(2));
-        actual.add(logFileArrayList.get(3));
-
-
-        expected = ReadLogFile.durationBetween2Dates(startDateTimeString, endDateTimeString, logFileArrayList);
-
-
-        assertEquals("all list", actual, expected);
-        actual.clear();
-        expected.clear();
-
-
-        startDateTimeString = "19-05-23T19:56:20.564Z";
-        endDateTimeString = "19-05-23T19:58:55.564Z";
-
-
-        expected = ReadLogFile.durationBetween2Dates(startDateTimeString, endDateTimeString, logFileArrayList);
-
-
-        assertEquals("Nothing", expected, expected);
-
-    }
-
-    @Test
-    public void logLinesWithStartAndPeriod() {
-
-
-        String startDateTimeString = "19-05-23T20:58:15.564Z";
-        String period = "PT1M";
-
-
-        ArrayList<ReadLogFile> actual = new ArrayList<>();
-        actual.add(logFileArrayList.get(1));
-        ArrayList<ReadLogFile> expected = ReadLogFile.logLinesWithStartAndPeriod(period, startDateTimeString, logFileArrayList);
-
-        assertEquals(actual, expected);
-        System.out.println("--------");
-        actual.clear();
-        expected.clear();
-
-        startDateTimeString = "19-05-23T20:58:15.564Z";
-        period = "P1D";
-
-
-        actual.add(logFileArrayList.get(1));
-        actual.add(logFileArrayList.get(2));
-        actual.add(logFileArrayList.get(3));
-
-
-        expected = ReadLogFile.logLinesWithStartAndPeriod(period, startDateTimeString, logFileArrayList);
-
-
-        assertEquals(actual, expected);
-        System.out.println("--------");
-        actual.clear();
-        expected.clear();
-
-
-        startDateTimeString = "19-05-23T20:58:15.564Z";
-        period = "P1W";
-
-
-        actual.add(logFileArrayList.get(1));
-        actual.add(logFileArrayList.get(2));
-        actual.add(logFileArrayList.get(3));
-
-
-        expected = ReadLogFile.logLinesWithStartAndPeriod(period, startDateTimeString, logFileArrayList);
-
-
-        assertEquals(actual, expected);
-        System.out.println("--------");
-        actual.clear();
-        expected.clear();
-
-
-    }
-
-    @Test
-    public void logLinesWithEndAndPeriod() {
-
-
-        String startDateTimeString = "19-05-23T20:59:15.564Z";
-        String period = "PT2M";
-
-
-        ArrayList<ReadLogFile> actual = new ArrayList<>();
-
-        actual.add(logFileArrayList.get(0));
-        actual.add(logFileArrayList.get(1));
-
-
-        ArrayList<ReadLogFile> expected = ReadLogFile.logLinesWithEndAndPeriod(period, startDateTimeString, logFileArrayList);
-
-        for (ReadLogFile s : expected)
-            System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
-
-
-        assertEquals(expected, actual);
-        actual.clear();
-        expected.clear();
-
-
-    }
+//    @Test
+//    public void durationBetween2Dates() {
+//
+//        String startDateTimeString = "19-05-23T20:56:20.564Z";
+//        String endDateTimeString = "19-05-23T20:58:55.564Z";
+//
+//
+//        ArrayList<ReadLogFile> actual = new ArrayList<>();
+//
+//        actual.add(logFileArrayList.get(0));
+//        actual.add(logFileArrayList.get(1));
+//
+//
+//        ArrayList<ReadLogFile> expected = ReadLogFile.durationBetween2Dates(startDateTimeString, endDateTimeString, logFileArrayList);
+//
+//
+//        assertEquals(actual, expected);
+//        actual.clear();
+//        expected.clear();
+//
+//
+//        startDateTimeString = "19-05-23T19:56:20.564Z";
+//        endDateTimeString = "19-05-23T21:58:55.564Z";
+//
+//
+//        actual.add(logFileArrayList.get(0));
+//        actual.add(logFileArrayList.get(1));
+//        actual.add(logFileArrayList.get(2));
+//        actual.add(logFileArrayList.get(3));
+//
+//
+//        expected = ReadLogFile.durationBetween2Dates(startDateTimeString, endDateTimeString, logFileArrayList);
+//
+//
+//        assertEquals("all list", actual, expected);
+//        actual.clear();
+//        expected.clear();
+//
+//
+//        startDateTimeString = "19-05-23T19:56:20.564Z";
+//        endDateTimeString = "19-05-23T19:58:55.564Z";
+//
+//
+//        expected = ReadLogFile.durationBetween2Dates(startDateTimeString, endDateTimeString, logFileArrayList);
+//
+//
+//        assertEquals("Nothing", expected, expected);
+//
+//    }
+//
+//    @Test
+//    public void logLinesWithStartAndPeriod() {
+//
+//
+//        String startDateTimeString = "19-05-23T20:58:15.564Z";
+//        String period = "PT1M";
+//
+//
+//        ArrayList<ReadLogFile> actual = new ArrayList<>();
+//        actual.add(logFileArrayList.get(1));
+//        ArrayList<ReadLogFile> expected = ReadLogFile.logLinesWithStartAndPeriod(period, startDateTimeString, logFileArrayList);
+//
+//        assertEquals(actual, expected);
+//        System.out.println("--------");
+//        actual.clear();
+//        expected.clear();
+//
+//        startDateTimeString = "19-05-23T20:58:15.564Z";
+//        period = "P1D";
+//
+//
+//        actual.add(logFileArrayList.get(1));
+//        actual.add(logFileArrayList.get(2));
+//        actual.add(logFileArrayList.get(3));
+//
+//
+//        expected = ReadLogFile.logLinesWithStartAndPeriod(period, startDateTimeString, logFileArrayList);
+//
+//
+//        assertEquals(actual, expected);
+//        System.out.println("--------");
+//        actual.clear();
+//        expected.clear();
+//
+//
+//        startDateTimeString = "19-05-23T20:58:15.564Z";
+//        period = "P1W";
+//
+//
+//        actual.add(logFileArrayList.get(1));
+//        actual.add(logFileArrayList.get(2));
+//        actual.add(logFileArrayList.get(3));
+//
+//
+//        expected = ReadLogFile.logLinesWithStartAndPeriod(period, startDateTimeString, logFileArrayList);
+//
+//
+//        assertEquals(actual, expected);
+//        System.out.println("--------");
+//        actual.clear();
+//        expected.clear();
+//
+//
+//    }
+//
+//    @Test
+//    public void logLinesWithEndAndPeriod() {
+//
+//
+//        String startDateTimeString = "19-05-23T20:59:15.564Z";
+//        String period = "PT2M";
+//
+//
+//        ArrayList<ReadLogFile> actual = new ArrayList<>();
+//
+//        actual.add(logFileArrayList.get(0));
+//        actual.add(logFileArrayList.get(1));
+//
+//
+//        ArrayList<ReadLogFile> expected = ReadLogFile.logLinesWithEndAndPeriod(period, startDateTimeString, logFileArrayList);
+//
+//        for (ReadLogFile s : expected)
+//            System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
+//
+//
+//        assertEquals(expected, actual);
+//        actual.clear();
+//        expected.clear();
+//
+//
+//    }
 
 }

@@ -1,10 +1,8 @@
-package com.readlog;
+package com.ParseArgs;
 
 import com.logfilter.ReadLogFile;
 
-import java.util.ArrayList;
-
-public class Log {
+public class Arg {
 
     public ReadLogFile filter(String mask, String field, ReadLogFile arrayList){
 

@@ -1,6 +1,6 @@
 package com.logfilter;
 
-import com.readlog.ParseArgs;
+import com.ParseArgs.ParseArgs;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
@@ -87,8 +87,8 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         int numberOfFilters = argsList.size();
         int filterCounter = 0;
 
-        if (argsList.get(0).getField().equals("stat")){
-            stat =1;
+        if (argsList.get(0).getField().equals("stat")) {
+            stat = 1;
         }
 
         try {
@@ -107,7 +107,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
                     }
                 }
-
 
 
                 if (filterCounter == numberOfFilters) {
@@ -201,16 +200,16 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     }
 
 
-    public static ArrayList<ReadLogFile> durationBetween2Dates(String startDateTimeString, String endDateTimeString, ArrayList<ReadLogFile> arrayOfLogLines) {
+    public static ReadLogFile durationBetween2Dates(String startDateTimeString, String endDateTimeString, ReadLogFile logLines) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
-        return linesBetween2Dates(startDateTime, endDateTime, arrayOfLogLines);
+        return linesBetween2Dates(startDateTime, endDateTime, logLines);
 
     }
 
-    public static ArrayList<ReadLogFile> logLinesWithStartAndPeriod(String durationString, String startDateTimeString, ArrayList<ReadLogFile> arrayOfLogLines) {
+    public static ReadLogFile logLinesWithStartAndPeriod(String durationString, String startDateTimeString, ReadLogFile logLine) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
@@ -237,12 +236,12 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             }
         }
 
-        return linesBetween2Dates(startDateTime, endDateTime, arrayOfLogLines);
+        return linesBetween2Dates(startDateTime, endDateTime, logLine);
 
     }
 
 
-    public static ArrayList<ReadLogFile> logLinesWithEndAndPeriod(String durationString, String endDateTimeString, ArrayList<ReadLogFile> arrayOfLogLines) {
+    public static ReadLogFile logLinesWithEndAndPeriod(String durationString, String endDateTimeString, ReadLogFile logLine) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime endDateTime = LocalDateTime.now();
@@ -277,66 +276,38 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             }
         }
 
-        return linesBetween2Dates(startDateTime, endDateTime, arrayOfLogLines);
+        return linesBetween2Dates(startDateTime, endDateTime, logLine);
 
     }
 
-    public static ArrayList<ReadLogFile> linesBetween2Dates(LocalDateTime startDateTime, LocalDateTime endDateTime, ArrayList<ReadLogFile> arrayOfLogLines) {
+    public static ReadLogFile linesBetween2Dates(LocalDateTime startDateTime, LocalDateTime endDateTime, ReadLogFile logLine) {
 
-        ArrayList<ReadLogFile> filteredList = new ArrayList<>();
+        ReadLogFile filteredList = new ReadLogFile();
+
         int g = 0;
         int i = 0;
 
-        for (int k = 0; k < arrayOfLogLines.size(); k++) {
-            if (arrayOfLogLines.get(k).dateTime.isAfter(startDateTime)) {
-                i = k;
-                break;
-            }
+        if (logLine.dateTime.isAfter(startDateTime)) {
+            i = 1;
         }
 
-
-        for (int k = 0; k < arrayOfLogLines.size(); k++) {
-            if (arrayOfLogLines.get(k).dateTime.isBefore(endDateTime))
-                g = k;
+        if (logLine.dateTime.isBefore(endDateTime)) {
+            g = 1;
         }
 
-        if (i > g) {
+        if ((i == 1) | (g == 1)) {
             System.out.println("Nothing found, End time is before or equal Start time");
             System.exit(1);
         } else {
 
-            for (int b = i; b <= g; b++)
-                filteredList.add(arrayOfLogLines.get(b));
+            filteredList = logLine;
 
         }
 
         return filteredList;
     }
 
-    public static ReadLogFile filter(String mask, String field, ReadLogFile logLine) {
 
-        ReadLogFile filteredLine = new ReadLogFile();
-        mask = convertMask(mask);
-        Pattern p = Pattern.compile(mask);
-
-        if (field.equals("name")) {
-
-            if (!p.matcher(logLine.name).matches()) {
-                filteredLine = logLine;
-
-            }
-        } else if (field.equals("message")) {
-
-            if (!p.matcher(logLine.message).matches()) {
-                filteredLine = logLine;
-
-            }
-        } else if (field.equals("level")) {
-            filteredLine = levelFilter(mask, logLine);
-        }
-
-        return filteredLine;
-    }
 
     @Override
     public int compareTo(ReadLogFile o) {
@@ -344,29 +315,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         int result = this.getDateTime().compareTo(o.getDateTime());
 
         return result;
-    }
-
-    public static ReadLogFile levelFilter(String mask, ReadLogFile logLine) {
-
-        ReadLogFile filteredLine = new ReadLogFile();
-        String[] maskArray = mask.split(",");
-        int numberOfFilters = maskArray.length;
-        int filterCounter = 0;
-
-        for (String m : maskArray) {
-            m = convertMask(m);
-            Pattern p = Pattern.compile(m);
-
-            if (!p.matcher(logLine.getLevel()).matches()) {
-                filterCounter++;
-            }
-        }
-        if (filterCounter == numberOfFilters) {
-
-            filteredLine = logLine;
-        }
-
-        return filteredLine;
     }
 
     public static String convertMask(String mask) {

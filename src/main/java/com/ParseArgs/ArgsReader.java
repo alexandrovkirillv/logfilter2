@@ -1,4 +1,4 @@
-package com.readlog;
+package com.ParseArgs;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -24,7 +24,7 @@ public class ArgsReader {
 
         System.out.println("");
 
-        for (Log l : argsList) {
+        for (Arg l : argsList) {
       //      l.filter();
         }
 
