@@ -134,6 +134,9 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             in.close();
         }
 
+        if (arrayLogLines.isEmpty()){
+            System.out.println("Nothing found");
+        }
 
 
         return arrayLogLines;

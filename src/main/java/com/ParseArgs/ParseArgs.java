@@ -169,11 +169,9 @@ public class ParseArgs extends Arg {
 
         }
 
-        for (String s : args) {
-
-        }
 
         for (String s : args) {
+
             if (s.contains(".log")) {
                 logFileName = s;
             }

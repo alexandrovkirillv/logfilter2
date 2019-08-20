@@ -2,11 +2,11 @@ package com.logfilter;
 
 import com.ParseArgs.ParseArgs;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.logfilter.ReadLogFile.read;
-import static com.logfilter.Stat.showStat;
 
 /**
  * This is a utility which allows to filter log lines and collect the statistics.
@@ -26,11 +26,6 @@ public class Main {
         checkStat(finSort,args);
 
         showResult(finSort);
-
-        if (finSort.isEmpty()) {
-            System.out.println("Nothing found");
-        }
-
 
 
 //        if ((readLogFiles.getStrictCount() > 0) && (status.equals("--strict"))) {
@@ -54,7 +49,6 @@ public class Main {
 //            }
 //        }
 
-
     }
 
     public static void checkStat ( ArrayList<ReadLogFile> finSort, String[] args) throws FileNotFoundException {
@@ -67,9 +61,6 @@ public class Main {
             stat.showStat(finSort);
             finSort.clear();
         }
-
-
-
 
     }
 
