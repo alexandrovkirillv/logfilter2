@@ -8,11 +8,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Alexandrov Kirill
@@ -29,7 +30,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     private String level = "";
     private String name = "";
     private String message = "";
-    private static int stat = 0;
     private static int strictCount = 0;
     private static Set<ReadLogFile> arrayLogLines = new TreeSet<>();
 
@@ -69,11 +69,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     }
 
 
-    public static int getStat() {
-        return stat;
-    }
-
-    public static Set<ReadLogFile> read(String status, String[] args) {
+    public static Set<ReadLogFile> read(String status, String[] args) throws FileNotFoundException {
 
 
         ParseArgs parseArgs = new ParseArgs();
@@ -86,9 +82,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         int numberOfFilters = argsList.size();
         int filterCounter = 0;
 
-        if (argsList.get(0).getField().equals("stat")) {
-            stat = 1;
-        }
 
         try {
             LineIterator it = FileUtils.lineIterator(f, "UTF-8");
@@ -96,6 +89,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             while (it.hasNext()) {
 
                 String str = (it.nextLine().replaceAll("[\\s]{2,}", " "));
+
 
                 for (ParseArgs p : argsList) {
                     tempLog = p.getArg().filter(p.getMask(), p.getField(), getData(str, status), parseArgs.getStartDateTimeString(),parseArgs.getEndDateTimeString(),parseArgs.getPeriodTime());
@@ -108,7 +102,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
                 }
 
 
-                if (filterCounter == numberOfFilters) {
+                if ((filterCounter == numberOfFilters)&(filterCounter!=0)) {
                     arrayLogLines.add(tempLog);
                 }
                 filterCounter = 0;
@@ -139,6 +133,8 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             }
             in.close();
         }
+
+
 
         return arrayLogLines;
     }

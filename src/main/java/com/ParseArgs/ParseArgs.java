@@ -2,7 +2,10 @@ package com.ParseArgs;
 
 import com.logfilter.Stat;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ParseArgs extends Arg {
 
@@ -62,7 +65,7 @@ public class ParseArgs extends Arg {
         return endDateTimeString;
     }
 
-    public ArrayList<ParseArgs> parseArgs(String[] args) {
+    public ArrayList<ParseArgs> parseArgs(String[] args) throws FileNotFoundException {
 
         for (int i = 0; i < args.length; i++) {
 
@@ -94,7 +97,7 @@ public class ParseArgs extends Arg {
 
                 case "-c":
 
-                    Arg log = new Arg();
+                    Arg arg = new Arg();
                     arrayList.add(new ParseArgs(arg, "", "stat"));
                     break;
 
@@ -166,6 +169,9 @@ public class ParseArgs extends Arg {
 
         }
 
+        for (String s : args) {
+
+        }
 
         for (String s : args) {
             if (s.contains(".log")) {
@@ -177,6 +183,13 @@ public class ParseArgs extends Arg {
             } else if ((s.equals("-f")) || (s.equals("--follow"))) {
 
                 status = s;
+            }
+            if ((s.contains("-h")) || (s.contains("--help"))) {
+
+                Scanner sc = new Scanner(new File("./src/main/resources/help.txt"));
+                while (sc.hasNext())
+                    System.out.println(sc.nextLine());
+                sc.close();
             }
         }
 

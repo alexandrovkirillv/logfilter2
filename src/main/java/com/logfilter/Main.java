@@ -1,5 +1,7 @@
 package com.logfilter;
 
+import com.ParseArgs.ParseArgs;
+
 import java.io.*;
 import java.util.*;
 
@@ -19,40 +21,23 @@ public class Main {
 
         String status = "";
 
-        ReadLogFile readLogFiles = new ReadLogFile();
-
         ArrayList<ReadLogFile> finSort = new ArrayList<>(read(status, args));
 
-        if (readLogFiles.getStat()==1){
-            showStat(finSort);
-        }
+        checkStat(finSort,args);
 
+        showResult(finSort);
 
         if (finSort.isEmpty()) {
             System.out.println("Nothing found");
         }
 
-        if ((Arrays.asList(args).contains("-c")) || (Arrays.asList(args).contains("--stats"))) {
-            finSort.clear();
-        }
 
-        for (String s : args) {
-            if ((s.contains("-h")) || (s.contains("--help"))) {
 
-                Scanner sc = new Scanner(new File("help.txt"));
-                while (sc.hasNext())
-                    System.out.println(sc.nextLine());
-                sc.close();
-            }
-        }
+//        if ((readLogFiles.getStrictCount() > 0) && (status.equals("--strict"))) {
+//            System.exit(1);
+//        }
 
-        for (ReadLogFile s : finSort) {
-            System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
-        }
 
-        if ((readLogFiles.getStrictCount() > 0) && (status.equals("--strict"))) {
-            System.exit(1);
-        }
 
 
 //        if (Arrays.asList(args).contains("-o")) {
@@ -69,6 +54,30 @@ public class Main {
 //            }
 //        }
 
+
+    }
+
+    public static void checkStat ( ArrayList<ReadLogFile> finSort, String[] args) throws FileNotFoundException {
+
+        ParseArgs parseArgs = new ParseArgs();
+        ArrayList<ParseArgs> argsList = parseArgs.parseArgs(args);
+
+        if (argsList.get(0).getField().equals("stat")) {
+            Stat stat = new Stat();
+            stat.showStat(finSort);
+            finSort.clear();
+        }
+
+
+
+
+    }
+
+    public static void showResult (ArrayList<ReadLogFile> finSort){
+
+        for (ReadLogFile s : finSort) {
+            System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
+        }
 
     }
 
