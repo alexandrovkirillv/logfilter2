@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * @author Alexandrov Kirill
@@ -99,7 +98,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
                 String str = (it.nextLine().replaceAll("[\\s]{2,}", " "));
 
                 for (ParseArgs p : argsList) {
-                    tempLog = p.getLogs().filter(p.getMask(), p.getField(), getData(str, status));
+                    tempLog = p.getArg().filter(p.getMask(), p.getField(), getData(str, status), parseArgs.getStartDateTimeString(),parseArgs.getEndDateTimeString(),parseArgs.getPeriodTime());
 
                     if (!tempLog.getLevel().equals("")) {
 
@@ -154,6 +153,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         LocalDateTime dateTimeTemp = LocalDateTime.now();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
         try {
             dateTimeTemp = (LocalDateTime.parse(subStr[0], formatter));
         } catch (Exception e) {
@@ -199,116 +199,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
     }
 
-
-    public static ReadLogFile durationBetween2Dates(String startDateTimeString, String endDateTimeString, ReadLogFile logLines) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
-        return linesBetween2Dates(startDateTime, endDateTime, logLines);
-
-    }
-
-    public static ReadLogFile logLinesWithStartAndPeriod(String durationString, String startDateTimeString, ReadLogFile logLine) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeString, formatter);
-
-        LocalDateTime endDateTime = LocalDateTime.now();
-
-        if (durationString.contains("W")) {
-
-            try {
-                Period p = Period.parse(durationString);
-                endDateTime = startDateTime.plusDays(p.getDays());
-            } catch (Exception e) {
-                System.out.println("Wrong period format");
-                System.exit(0);
-            }
-        } else {
-
-            try {
-                Duration duration = Duration.parse(durationString);
-                endDateTime = startDateTime.plusNanos(duration.toNanos());
-            } catch (Exception e) {
-                System.out.println("Wrong period format");
-                System.exit(0);
-            }
-        }
-
-        return linesBetween2Dates(startDateTime, endDateTime, logLine);
-
-    }
-
-
-    public static ReadLogFile logLinesWithEndAndPeriod(String durationString, String endDateTimeString, ReadLogFile logLine) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime endDateTime = LocalDateTime.now();
-
-        try {
-            endDateTime = LocalDateTime.parse(endDateTimeString, formatter);
-        } catch (java.time.format.DateTimeParseException e) {
-            System.out.println("Wrong DateTime format");
-            System.exit(0);
-
-        }
-
-
-        LocalDateTime startDateTime = LocalDateTime.now();
-
-        if (durationString.contains("W")) {
-            try {
-                Period p = Period.parse(durationString);
-                startDateTime = endDateTime.minusDays(p.getDays());
-            } catch (Exception e) {
-                System.out.println("Wrong period format");
-                System.exit(0);
-            }
-
-        } else {
-            try {
-                Duration duration = Duration.parse(durationString);
-                startDateTime = endDateTime.minusNanos(duration.toNanos());
-            } catch (Exception e) {
-                System.out.println("Wrong period format");
-                System.exit(0);
-            }
-        }
-
-        return linesBetween2Dates(startDateTime, endDateTime, logLine);
-
-    }
-
-    public static ReadLogFile linesBetween2Dates(LocalDateTime startDateTime, LocalDateTime endDateTime, ReadLogFile logLine) {
-
-        ReadLogFile filteredList = new ReadLogFile();
-
-        int g = 0;
-        int i = 0;
-
-        if (logLine.dateTime.isAfter(startDateTime)) {
-            i = 1;
-        }
-
-        if (logLine.dateTime.isBefore(endDateTime)) {
-            g = 1;
-        }
-
-        if ((i == 1) | (g == 1)) {
-            System.out.println("Nothing found, End time is before or equal Start time");
-            System.exit(1);
-        } else {
-
-            filteredList = logLine;
-
-        }
-
-        return filteredList;
-    }
-
-
-
     @Override
     public int compareTo(ReadLogFile o) {
 
@@ -317,22 +207,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         return result;
     }
 
-    public static String convertMask(String mask) {
 
-        ArrayList<Character> charsA = new ArrayList<Character>();
-        for (char c : mask.toCharArray()) {
-            charsA.add(c);
-        }
-
-        if ((charsA.get(charsA.size() - 1).equals('*')) || (charsA.get(0).equals('*'))) {
-            mask = mask.replaceAll("[*]", "\\.\\*");
-        } else if ((charsA.get(charsA.size() - 1).equals('?')) || (charsA.get(0).equals('?'))) {
-            mask = mask.replaceAll("[?]", "\\.\\?");
-        }
-
-        return mask;
-
-    }
 
 }
 

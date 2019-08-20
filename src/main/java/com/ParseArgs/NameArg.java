@@ -1,16 +1,19 @@
 package com.ParseArgs;
 
+import com.logfilter.Filters;
 import com.logfilter.ReadLogFile;
+
 
 public class NameArg extends Arg {
 
 
     @Override
-    public ReadLogFile filter(String mask, String field, ReadLogFile arrayList) {
+    public ReadLogFile filter(String mask, String field, ReadLogFile arrayList, String startTime, String endTime, String period) {
 
-        ReadLogFile readLogFile = new ReadLogFile();
 
-        return readLogFile.filter(mask,field,arrayList);
+        Filters filters = new Filters();
+
+        return filters.filter(mask,field,arrayList);
 
     }
 

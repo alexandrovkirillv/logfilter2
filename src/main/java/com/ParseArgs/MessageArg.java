@@ -1,17 +1,17 @@
 package com.ParseArgs;
 
+import com.logfilter.Filters;
 import com.logfilter.ReadLogFile;
 
 public class MessageArg extends Arg{
 
 
     @Override
-    public ReadLogFile filter(String mask, String field, ReadLogFile arrayList) {
+    public ReadLogFile filter(String mask, String field, ReadLogFile arrayList, String startTime, String endTime, String period) {
 
-      
-        ReadLogFile readLogFile = new ReadLogFile();
+        Filters filters = new Filters();
 
-        return readLogFile.filter(mask,field,arrayList);
+        return filters.filter(mask,field,arrayList);
 
     }
 

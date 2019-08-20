@@ -17,34 +17,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        String startDateTime = "";
-        String endDateTime = "";
-        String periodTime = "";
-        String outputFileName = "";
         String status = "";
 
-
         ReadLogFile readLogFiles = new ReadLogFile();
-
 
         ArrayList<ReadLogFile> finSort = new ArrayList<>(read(status, args));
 
         if (readLogFiles.getStat()==1){
             showStat(finSort);
         }
-
-
-
-//        if ((!startDateTime.equals("")) && (!endDateTime.equals(""))) {
-//            finSort = readLogFiles.durationBetween2Dates(startDateTime, endDateTime, finSort);
-//        }
-//
-//        if ((!startDateTime.equals("")) && (!periodTime.equals(""))) {
-//            finSort = readLogFiles.logLinesWithStartAndPeriod(periodTime, startDateTime, finSort);
-//        }
-//        if ((!endDateTime.equals("")) && (!periodTime.equals(""))) {
-//            finSort = readLogFiles.logLinesWithEndAndPeriod(periodTime, endDateTime, finSort);
-//        }
 
 
         if (finSort.isEmpty()) {
@@ -64,11 +45,6 @@ public class Main {
                 sc.close();
             }
         }
-
-
-        // Set<ReadLogFile> readLogFileSet = new TreeSet<>();
-        //  readLogFileSet.addAll(finSort);
-
 
         for (ReadLogFile s : finSort) {
             System.out.println(s.getDateTime() + " " + s.getLevel() + " " + "[" + s.getName() + "]" + " " + s.getMessage());
