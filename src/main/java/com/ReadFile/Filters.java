@@ -117,7 +117,7 @@ public class Filters extends ReadLogFile {
                 Period p = Period.parse(durationString);
                 endDateTime = startDateTime.plusDays(p.getDays());
 
-            } catch (Exception e) {
+            } catch (Exception DateTimeParseException) {
                 System.out.println("Wrong period\\date format");
                 System.exit(0);
             }
@@ -126,7 +126,7 @@ public class Filters extends ReadLogFile {
             try {
                 Duration duration = Duration.parse(durationString);
                 endDateTime = startDateTime.plusNanos(duration.toNanos());
-            } catch (Exception e) {
+            } catch (Exception DateTimeParseException) {
                 System.out.println("Wrong period\\date format");
                 System.exit(0);
             }
@@ -146,7 +146,7 @@ public class Filters extends ReadLogFile {
                 Period p = Period.parse(durationString);
                 startDateTime = endDateTime.minusDays(p.getDays());
 
-            } catch (Exception e) {
+            } catch (Exception DateTimeParseException) {
                 System.out.println("Wrong period format");
                 System.exit(0);
             }
@@ -155,7 +155,7 @@ public class Filters extends ReadLogFile {
             try {
                 Duration duration = Duration.parse(durationString);
                 startDateTime = endDateTime.minusNanos(duration.toNanos());
-            } catch (Exception e) {
+            } catch (Exception DateTimeParseException) {
                 System.out.println("Wrong period format");
                 System.exit(0);
             }
@@ -174,7 +174,7 @@ public class Filters extends ReadLogFile {
             dateTime = LocalDateTime.parse(dateString, formatter);
 
 
-        } catch (Exception e) {
+        } catch (Exception DateTimeParseException) {
             System.out.println("Wrong date format");
             System.exit(0);
 

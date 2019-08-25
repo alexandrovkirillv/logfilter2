@@ -1,16 +1,14 @@
 import com.ReadFile.Filters;
 import com.ReadFile.ReadLogFile;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FiltersTest {
 
@@ -18,7 +16,6 @@ public class FiltersTest {
 
     @Before
     public void setUp() throws Exception {
-
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -39,7 +36,6 @@ public class FiltersTest {
     }
 
 
-
     @Test
     public void filter() {
 
@@ -50,37 +46,34 @@ public class FiltersTest {
         ReadLogFile readLogFile;
 
 
-        readLogFile = filters.filter(mask,field,logFileArrayList.get(2));
+        readLogFile = filters.filter(mask, field, logFileArrayList.get(2));
 
         String expected = "";
 
-        assertEquals("LogLine is filtered by message (Run*)",expected, readLogFile.getLevel());
+        assertEquals("LogLine is filtered by message (Run*)", expected, readLogFile.getLevel());
 
 
         mask = "main";
         field = "name";
 
-        readLogFile = filters.filter(mask,field,logFileArrayList.get(1));
+        readLogFile = filters.filter(mask, field, logFileArrayList.get(1));
 
-        assertEquals("LogLine is filtered by name (main)",expected, readLogFile.getLevel());
+        assertEquals("LogLine is filtered by name (main)", expected, readLogFile.getLevel());
 
         mask = "INFO";
         field = "level";
 
-        readLogFile = filters.filter(mask,field,logFileArrayList.get(0));
+        readLogFile = filters.filter(mask, field, logFileArrayList.get(0));
 
-        assertEquals("LogLine is filtered by level (INFO)",expected, readLogFile.getLevel());
+        assertEquals("LogLine is filtered by level (INFO)", expected, readLogFile.getLevel());
 
         mask = "INFO,WARN";
         field = "level";
 
-        readLogFile = filters.filter(mask,field,logFileArrayList.get(3));
+        readLogFile = filters.filter(mask, field, logFileArrayList.get(3));
 
         expected = "ERROR";
-        assertEquals("LogLine is filtered by level (INFO), but level is ERROR",expected, readLogFile.getLevel());
-
-
-
+        assertEquals("LogLine is filtered by level (INFO), but level is ERROR", expected, readLogFile.getLevel());
 
 
     }
@@ -88,7 +81,7 @@ public class FiltersTest {
 
 
     @Test
-    public void durationBetween2Dates() {
+    public void durationBetween2Dates(){
 
         Filters filters = new Filters();
 
@@ -97,26 +90,29 @@ public class FiltersTest {
         String period = "";
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        LocalDateTime expected = LocalDateTime.parse("19-05-23T20:57:20.564Z",formatter);
+        LocalDateTime expected = LocalDateTime.parse("19-05-23T20:57:20.564Z", formatter);
 
-        ReadLogFile readLogFile= filters.durationBetween2Dates(startTime,endTime,period,logFileArrayList.get(0));
+        ReadLogFile readLogFile = filters.durationBetween2Dates(startTime, endTime, period, logFileArrayList.get(0));
 
-        assertEquals("start time + end time",expected,readLogFile.getDateTime());
+        assertEquals("start time + end time", expected, readLogFile.getDateTime());
 
 
         startTime = "19-05-23T20:56:20.564Z";
         endTime = "";
         period = "PT2M";
 
-        readLogFile= filters.durationBetween2Dates(startTime,endTime,period,logFileArrayList.get(0));
-        assertEquals("start time + period",expected,readLogFile.getDateTime());
+        readLogFile = filters.durationBetween2Dates(startTime, endTime, period, logFileArrayList.get(0));
+        assertEquals("start time + period", expected, readLogFile.getDateTime());
 
         startTime = "";
         endTime = "19-05-23T20:58:20.564Z";
         period = "P2W";
 
-        readLogFile= filters.durationBetween2Dates(startTime,endTime,period,logFileArrayList.get(0));
-        assertEquals("end time + period",expected,readLogFile.getDateTime());
+        readLogFile = filters.durationBetween2Dates(startTime, endTime, period, logFileArrayList.get(0));
+        assertEquals("end time + period", expected, readLogFile.getDateTime());
+
+
+
 
     }
 
