@@ -1,5 +1,5 @@
-package com.ReadFile;
-
+import com.ReadFile.Filters;
+import com.ReadFile.ReadLogFile;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -114,17 +114,6 @@ public class FiltersTest {
 
         readLogFile= filters.durationBetween2Dates(startTime,endTime,period,logFileArrayList.get(0));
         assertEquals("end time + period",expected,readLogFile.getDateTime());
-
-        startTime = "";
-        endTime = "19-04-51gd23T20:58:20.564Z";
-        period = "P2W";
-
-        readLogFile= filters.durationBetween2Dates(startTime,endTime,period,logFileArrayList.get(0));
-        assertEquals("end time + period",expected,readLogFile.getDateTime());
-
-
-
-
 
 
 
