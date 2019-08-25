@@ -1,4 +1,4 @@
-package com.logfilter;
+package com.ReadFile;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -6,6 +6,14 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+/**
+ * @return methods durationBetween2Dates(), logLinesWithStartAndPeriod(),
+ * logLinesWithEndAndPeriod() returns filtered by time period log lines;
+ * <p>
+ * methods filter() and linesFilter() returns log line filtered  by level, name, message.
+ */
+
 
 public class Filters extends ReadLogFile {
 
@@ -182,20 +190,14 @@ public class Filters extends ReadLogFile {
         int g = 0;
         int i = 0;
 
-        System.out.println("S = " + startDateTime);
-        System.out.println("L = " + logLine.getDateTime());
-        System.out.println("E = " + endDateTime);
-
-        System.out.println("-------");
-
         if (logLine.getDateTime().isBefore(startDateTime)) {
             i = 1;
-            System.out.println("I = " + i);
+
         }
 
         if (logLine.getDateTime().isAfter(endDateTime)) {
             g = 1;
-            System.out.println("G = " + g);
+
         }
 
         if ((i == 0) & (g == 0)) {

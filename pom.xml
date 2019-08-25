@@ -60,7 +60,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.logfilter.Main</mainClass>
+                            <mainClass>com.ReadFile.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

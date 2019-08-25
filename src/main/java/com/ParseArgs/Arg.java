@@ -1,6 +1,6 @@
 package com.ParseArgs;
 
-import com.logfilter.ReadLogFile;
+import com.ReadFile.ReadLogFile;
 
 public class Arg {
 

@@ -1,15 +1,14 @@
-import com.logfilter.ReadLogFile;
+import com.ReadFile.ReadLogFile;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
+import javax.management.InstanceNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static com.ReadFile.ReadLogFile.getData;
 
 public class ReadLogFileTest {
 
@@ -37,12 +36,28 @@ public class ReadLogFileTest {
     }
 
 
+
+
+    @Test
+    public void getData1(String string) {
+
+        string = "19-05-23T20:57:20.564Z INFO [ main] Starting up an application";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+        ReadLogFile actual = new ReadLogFile();
+        actual = getData(string);
+
+        ReadLogFile expected = new ReadLogFile(LocalDateTime.parse("19-05-23T20:57:20.564Z",formatter), "INFO", "main" , "Starting up an application");
+
+
+    }
 //    @Test
 //    public void read() throws FileNotFoundException {
 //
 //
 //        String status = "";
-//        String logFileName = "testExample.log";
+//        String logFileName = "";
 //
 //        ArrayList<ReadLogFile> actual = new ArrayList<>();
 //
@@ -52,6 +67,8 @@ public class ReadLogFileTest {
 //        actual.add(logFileArrayList.get(3));
 //
 //
+
+
 //        ArrayList<ReadLogFile> expected = new ArrayList<>(ReadLogFile.read(status, logFileName));
 //
 //

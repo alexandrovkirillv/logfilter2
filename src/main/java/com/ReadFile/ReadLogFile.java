@@ -1,27 +1,20 @@
-package com.logfilter;
+package com.ReadFile;
 
 import com.ParseArgs.ParseArgs;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+
+import static com.ReadFile.Stat.calcStat;
 
 /**
  * @author Alexandrov Kirill
  * @version 0.2
- * @return method read() is reading file and returns Set of objects with  fields (localdate, level, name, message);
- * methods durationBetween2Dates(), logLinesWithStartAndPeriod(),
- * logLinesWithEndAndPeriod() returns filtered by time period log lines;
- * methods filter() and linesFilter() returns log filtered lines by level, name, message.
+ * @return method read() is reading file and returns log line with fields, witch already filtered (localdate, level, name, message);
  */
 
 public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
@@ -31,7 +24,8 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
     private String name = "";
     private String message = "";
     private static int strictCount = 0;
-    private static Set<ReadLogFile> arrayLogLines = new TreeSet<>();
+    private static PrintWriter writer;
+
 
     public ReadLogFile() {
     }
@@ -42,11 +36,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         this.name = name;
         this.message = message;
     }
-
-    public static int getStrictCount() {
-        return strictCount;
-    }
-
 
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -64,23 +53,29 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
         return message;
     }
 
-    public Set<ReadLogFile> getArrayLogLines() {
-        return arrayLogLines;
-    }
 
-
-    public static Set<ReadLogFile> read(String status, String[] args) throws FileNotFoundException {
+    public static void read(String[] args) throws FileNotFoundException {
 
 
         ParseArgs parseArgs = new ParseArgs();
 
-        String SIGINT = "SIGINT";
         ArrayList<ParseArgs> argsList = parseArgs.parseArgs(args);
         String logFileName = parseArgs.getLogFileName();
+        String outFileName = parseArgs.getOutputFileName();
         File f = new File("./src/main/resources/" + logFileName);
         ReadLogFile tempLog = new ReadLogFile();
         int numberOfFilters = argsList.size();
         int filterCounter = 0;
+        int status = parseArgs.getStatus();
+        int stats = parseArgs.getStats();
+
+        if (!outFileName.equals("")) {
+            try {
+                writer = new PrintWriter("./src/main/resources/" + outFileName);
+            } catch (FileNotFoundException e) {
+
+            }
+        }
 
 
         try {
@@ -92,7 +87,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
 
                 for (ParseArgs p : argsList) {
-                    tempLog = p.getArg().filter(p.getMask(), p.getField(), getData(str, status), parseArgs.getStartDateTimeString(),parseArgs.getEndDateTimeString(),parseArgs.getPeriodTime());
+                    tempLog = p.getArg().filter(p.getMask(), p.getField(), getData(str), parseArgs.getStartDateTimeString(), parseArgs.getEndDateTimeString(), parseArgs.getPeriodTime());
 
                     if (!tempLog.getLevel().equals("")) {
 
@@ -102,10 +97,15 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
                 }
 
 
-                if ((filterCounter == numberOfFilters)&(filterCounter!=0)) {
-                    arrayLogLines.add(tempLog);
+                if ((filterCounter == numberOfFilters) & (filterCounter != 0) & (stats==0)) {
+                    showLine(tempLog);
+                    checkOutFile(outFileName, tempLog);
                 }
                 filterCounter = 0;
+
+                if ((strictCount > 0) & (status == 1)) {
+                    System.exit(1);
+                }
 
             }
             it.close();
@@ -118,31 +118,52 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             e.printStackTrace();
         }
 
-        if ((status.equals("-f")) || (status.equals("--follow"))) {
+    }
+
+    public static void checkOutFile(String outputFileName, ReadLogFile logLine) {
+
+        if (!outputFileName.equals("")) {
+
+
+            writer.append(logLine.getDateTime() + " " + logLine.getLevel() + " " + "[" + logLine.getName() + "]" + " " + logLine.getMessage());
+            writer.append('\n');
+
+            writer.flush();
+
+        }
+
+    }
+
+    public static void follow(int status) {
+
+        if (status == 2) {
             String str;
 
             Scanner in = new Scanner(System.in);
             System.out.println("Input log line(print 'SIGINT' for result): ");
-            while (!(str = in.nextLine()).equals(SIGINT)) {
+            while (!(str = in.nextLine()).equals("SIGINT")) {
 
                 str = str.replaceAll("[\\s]{2,}", " ");
 
-                getData(str, status);
-
+                getData(str);
 
             }
             in.close();
         }
 
-        if (arrayLogLines.isEmpty()){
-            System.out.println("Nothing found");
-        }
-
-
-        return arrayLogLines;
     }
 
-    public static ReadLogFile getData(String Str, String status) {
+    public static void showLine(ReadLogFile logLine) {
+
+
+
+            System.out.println(logLine.getDateTime() + " " + logLine.getLevel() + " " + "[" + logLine.getName() + "]" + " " + logLine.getMessage());
+
+    }
+
+    public static ReadLogFile getData(String Str) {
+
+        strictCount = 0;
 
         ReadLogFile logLine = new ReadLogFile();
 
@@ -155,6 +176,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
         try {
             dateTimeTemp = (LocalDateTime.parse(subStr[0], formatter));
+
         } catch (Exception e) {
 
             strictCount++;
@@ -188,11 +210,10 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
         if (strictCount == 0) {
             logLine = new ReadLogFile(dateTimeTemp, subStr[1], subStr[3].substring(0, subStr[3].length() - 1), messageStr);
+
+            calcStat(logLine);
         }
 
-        if (!status.equals("--strict")) {
-            strictCount = 0;
-        }
 
         return logLine;
 
@@ -205,7 +226,6 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
         return result;
     }
-
 
 
 }

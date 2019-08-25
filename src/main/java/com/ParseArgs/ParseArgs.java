@@ -1,7 +1,5 @@
 package com.ParseArgs;
 
-import com.logfilter.Stat;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,7 +8,7 @@ import java.util.Scanner;
 public class ParseArgs extends Arg {
 
     private String logFileName;
-    private String status;
+    private int status;
     private String mask;
     private String field;
     private ArrayList<ParseArgs> arrayList = new ArrayList<>();
@@ -18,6 +16,25 @@ public class ParseArgs extends Arg {
     private String startDateTimeString = "";
     private String endDateTimeString = "";
     private String periodTime = "";
+    private String outputFileName = "";
+    private int stats = 0;
+
+    public ParseArgs(Arg arg, String mask, String field) {
+
+        this.mask = mask;
+        this.field = field;
+        this.arg = arg;
+
+
+    }
+
+    public int getStats() {
+        return stats;
+    }
+
+    public String getOutputFileName() {
+        return outputFileName;
+    }
 
     public Arg getArg() {
         return arg;
@@ -39,16 +56,7 @@ public class ParseArgs extends Arg {
 
     }
 
-    public ParseArgs(Arg arg, String mask, String field) {
-
-        this.mask = mask;
-        this.field = field;
-        this.arg = arg;
-
-
-    }
-
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -98,12 +106,14 @@ public class ParseArgs extends Arg {
                 case "-c":
 
                     Arg arg = new Arg();
+                    stats = 1;
                     arrayList.add(new ParseArgs(arg, "", "stat"));
                     break;
 
                 case "--stats":
 
                     arg = new Arg();
+                    stats = 1;
                     arrayList.add(new ParseArgs(arg, "", "stat"));
                     break;
 
@@ -136,6 +146,7 @@ public class ParseArgs extends Arg {
                     endDateTimeString = args[i + 1];
 
                     break;
+
                 case "--end":
 
                     endDateTimeString = args[i + 1];
@@ -143,30 +154,43 @@ public class ParseArgs extends Arg {
                     break;
 
                 case "-p":
+
                     StartDateArg startDateArg = new StartDateArg();
                     periodTime = args[i + 1];
                     arrayList.add(new ParseArgs(startDateArg, args[i + 1], "start"));
                     break;
                 case "-period":
+
                     startDateArg = new StartDateArg();
                     periodTime = args[i + 1];
                     arrayList.add(new ParseArgs(startDateArg, args[i + 1], "start"));
                     break;
-                  /*
+
+                case "-o":
+                    outputFileName = args[i + 1];
+                    break;
+
+                case "--out":
 
 
+                    outputFileName = args[i + 1];
+                    break;
 
-                    case "-o":
-                        outputFileName = args[i + 1];
-                        break;
-                    case "--out":
-                        outputFileName = args[i + 1];
-                        break;
+                case "--strict":
 
-                    */
+                    status = 1;
+                    break;
+
+                case "-f":
+                    status = 2;
+                    break;
+
+                case "--follow":
+                    status = 2;
+                    break;
+
 
             }
-
         }
 
 
@@ -175,13 +199,7 @@ public class ParseArgs extends Arg {
             if (s.contains(".log")) {
                 logFileName = s;
             }
-            if (s.equals("--strict")) {
 
-                status = s;
-            } else if ((s.equals("-f")) || (s.equals("--follow"))) {
-
-                status = s;
-            }
             if ((s.contains("-h")) || (s.contains("--help"))) {
 
                 Scanner sc = new Scanner(new File("./src/main/resources/help.txt"));

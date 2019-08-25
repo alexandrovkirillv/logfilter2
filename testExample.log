@@ -1,4 +1,0 @@
-19-05-23T20:57:20.564Z INFO [ main] Starting up an application
-19-05-23T20:58:20.564Z INFO [ main] Initializing a worker pool
-19-05-23T20:59:20.564Z WARN [ worker-1] Run task #1241
-19-05-23T20:59:50.564Z ERROR [ worker-2] Run task #717
