@@ -1,14 +1,2 @@
-19-05-23T20:57:20.564Z INFO [ main] Starting up an application
-19-05-23T20:57:25.872Z INFO [ main] Initializing a worker pool
 19-05-23T20:57:30.032Z TRACE [ worker-1] Run task #1241
 19-05-23T20:57:32.421Z INFO [ worker-2] Run task #717
-19-05-23T20:57:33.843Z DEBUG [ main] Connecting to storage:3121
-19-05-23sdT20:57:58.931Z INFO [ worker-2] Task #717 has been completed
-19-05-23T20:57:59.001Z INFO [ main] Connection established
-19-05-23T20:58:14.315Z WARN [ worker-3] Run task #467
-19-05-23T20:58:15.917Z WARN [ worker-4] Task #467 is not configured
-19-05-23T20:58:34.143Z INFO [ worker-1] Task #1241 has been completed
-19-05-23T20:58:40.719Z INFO [ main] Application started successfully
-19-05-23T20:58:44.242Z INFO [ worker-2] Run task #937
-19-05-23T20:58:56.964Z ERROR [ worker-3] Task #467 finished with fail
-19-05-23T20:58:57.234Z WARN [ worker-3] Task #467 cannot be rescheduled

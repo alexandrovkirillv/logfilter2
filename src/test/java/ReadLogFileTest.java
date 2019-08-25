@@ -1,6 +1,9 @@
 import com.ReadFile.ReadLogFile;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -33,7 +36,19 @@ public class ReadLogFileTest {
 
 
     @Test
-    public void read() {
+    public void read() throws FileNotFoundException {
+
+        String [] args =  {"-m", "Run*", "example.log"};
+
+        ReadLogFile readLogFile = new ReadLogFile();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        readLogFile.read(args);
+
+        assertEquals("", output.toString());
+
+
     }
 
     @Test
