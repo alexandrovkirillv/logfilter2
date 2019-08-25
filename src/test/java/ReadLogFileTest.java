@@ -59,7 +59,4 @@ public class ReadLogFileTest {
     public void showLine() {
     }
 
-    @Test
-    public void getData1() {
-    }
 }

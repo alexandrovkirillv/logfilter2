@@ -118,6 +118,8 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
             e.printStackTrace();
         }
 
+        checkFollow(status);
+
     }
 
     public static void checkOutFile(String outputFileName, ReadLogFile logLine) {
@@ -134,7 +136,7 @@ public class ReadLogFile implements Comparable<ReadLogFile>, Serializable {
 
     }
 
-    public static void follow(int status) {
+    public static void checkFollow(int status) {
 
         if (status == 2) {
             String str;
