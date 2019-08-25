@@ -71,13 +71,16 @@ public class FiltersTest {
 
         assertEquals("LogLine is filtered by level (INFO)",expected, readLogFile.getLevel());
 
-        mask = "INFO";
+        mask = "INFO,WARN";
         field = "level";
 
         readLogFile = filters.filter(mask,field,logFileArrayList.get(3));
 
         expected = "ERROR";
         assertEquals("LogLine is filtered by level (INFO), but level is ERROR",expected, readLogFile.getLevel());
+
+
+
 
 
     }
@@ -114,8 +117,6 @@ public class FiltersTest {
 
         readLogFile= filters.durationBetween2Dates(startTime,endTime,period,logFileArrayList.get(0));
         assertEquals("end time + period",expected,readLogFile.getDateTime());
-
-
 
     }
 
