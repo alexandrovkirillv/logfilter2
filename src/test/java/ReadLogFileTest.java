@@ -38,7 +38,7 @@ public class ReadLogFileTest {
     @Test
     public void read() throws FileNotFoundException {
 
-        String [] args =  {"-m", "Run*", "example.log"};
+        String [] args =  {"-m", "Run*", "-t", "mai*", "-l", "WARN,ERROR", "exampleForTest.log"};
 
         ReadLogFile readLogFile = new ReadLogFile();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
